@@ -18,6 +18,10 @@ public class StudentEntity {
 
     private String name;
 
+    private String email;
+
+    private String password;
+
     private String registration;
 
     private LocalDate admissionDate;
@@ -34,6 +38,22 @@ public class StudentEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setRegistration(String registration) {
