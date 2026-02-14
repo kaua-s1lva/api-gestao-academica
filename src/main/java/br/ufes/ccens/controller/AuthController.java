@@ -1,7 +1,7 @@
 package br.ufes.ccens.controller;
 
+import br.ufes.ccens.dto.request.LoginStudentRequest;
 import br.ufes.ccens.entity.StudentEntity;
-import br.ufes.ccens.request.LoginRequest;
 import br.ufes.ccens.service.AuthService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.transaction.Transactional;
@@ -26,16 +26,17 @@ public class AuthController {
 
     @POST
     @Path("/login")
-    public Response login(LoginRequest loginRequest) {
+    public Response login(LoginStudentRequest loginRequest) {
         var tokenResponse = authService.login(loginRequest);
         return Response.ok(tokenResponse).build();
     }
 
-    @POST
-    @Path("/register")
-    @Transactional
-    public Response register(StudentEntity studentEntity) {
-        var student = authService.register(studentEntity);
-        return Response.status(Response.Status.CREATED).entity(student).build();
-    }
+    //VAMOS CRIAR UMA ROTA PARA QUALQUER USUÁRIO ACESSAR O SISTEMA?
+    // @POST
+    // @Path("/register")
+    // @Transactional
+    // public Response register(StudentEntity studentEntity) {
+    //     var student = authService.register(studentEntity);
+    //     return Response.status(Response.Status.CREATED).entity(student).build();
+    // }
 }

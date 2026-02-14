@@ -3,22 +3,31 @@ package br.ufes.ccens.service;
 import java.util.List;
 import java.util.UUID;
 
+import br.ufes.ccens.dto.request.SaveStudentRequest;
 import br.ufes.ccens.entity.StudentEntity;
 import br.ufes.ccens.exception.StudentNotFoundException;
+import br.ufes.ccens.mapper.StudentMapper;
 import br.ufes.ccens.repository.StudentRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class StudentService {
     private final StudentRepository studentRepository;
+    private final StudentMapper studentMapper;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper) {
         this.studentRepository = studentRepository;
+        this.studentMapper = studentMapper;
     }
 
-    public StudentEntity createStudent(StudentEntity studentEntity) {
-        studentRepository.persist(studentEntity);
-        return studentEntity;
+    public StudentEntity createStudent(SaveStudentRequest studentRequest) {
+        try {
+            var studentEntity = studentMapper.toEntity(studentRequest);
+            studentRepository.persistAndFlush(studentEntity);
+            return studentEntity;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao criar usuário: " + e.getMessage());
+        }
     }
 
     public List<StudentEntity> listAll(Integer page, Integer pageSize) {
@@ -28,12 +37,14 @@ public class StudentService {
     }
 
     public StudentEntity findById(UUID studentId) {
-        return (StudentEntity) studentRepository.findByIdOptional(studentId)
+        return studentRepository.findByIdOptional(studentId)
             .orElseThrow(StudentNotFoundException::new);
     }
 
-    public StudentEntity updateStudent(UUID studentId, StudentEntity studentEntity) {
+    public StudentEntity updateStudent(UUID studentId, SaveStudentRequest studentRequest) {
         var student = findById(studentId);
+        
+        var studentEntity = studentMapper.toEntity(studentRequest);
 
         student.setName(studentEntity.getName());
         student.setRegistration(studentEntity.getRegistration());

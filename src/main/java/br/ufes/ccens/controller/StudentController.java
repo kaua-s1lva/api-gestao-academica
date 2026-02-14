@@ -2,7 +2,7 @@ package br.ufes.ccens.controller;
 
 import java.util.UUID;
 
-import br.ufes.ccens.entity.StudentEntity;
+import br.ufes.ccens.dto.request.SaveStudentRequest;
 import br.ufes.ccens.service.StudentService;
 import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
@@ -42,9 +42,9 @@ public class StudentController {
     @POST
     @Transactional
     @RolesAllowed("User")
-    public Response createStudent(StudentEntity studentEntity) {
+    public Response createStudent(SaveStudentRequest studentRequest) {
         return Response.status(Response.Status.CREATED)
-                .entity(studentService.createStudent(studentEntity))
+                .entity(studentService.createStudent(studentRequest))
                 .build();
     }
 
@@ -60,8 +60,8 @@ public class StudentController {
     @RolesAllowed("User")
     public Response updateStudent(
             @PathParam("id") UUID studentId,
-            StudentEntity studentEntity) {
-        return Response.ok(studentService.updateStudent(studentId, studentEntity)).build();
+            SaveStudentRequest studentRequest) {
+        return Response.ok(studentService.updateStudent(studentId, studentRequest)).build();
     }
 
     @DELETE
