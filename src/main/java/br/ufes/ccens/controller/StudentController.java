@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import br.ufes.ccens.entity.StudentEntity;
 import br.ufes.ccens.service.StudentService;
+import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -21,6 +23,7 @@ import jakarta.ws.rs.core.Response;
 @Path("/students")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Authenticated
 public class StudentController {
     private final StudentService studentService;
 
@@ -30,17 +33,19 @@ public class StudentController {
 
     @GET
     public Response listAll(
-                @QueryParam("page") @DefaultValue("0") Integer page,
-                @QueryParam("pageSize") @DefaultValue("10") Integer pageSize
-            ) {
+            @QueryParam("page") @DefaultValue("0") Integer page,
+            @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
         var students = studentService.listAll(page, pageSize);
         return Response.ok(students).build();
     }
 
     @POST
     @Transactional
+    @RolesAllowed("User")
     public Response createStudent(StudentEntity studentEntity) {
-        return Response.ok(studentService.createStudent(studentEntity)).build();
+        return Response.status(Response.Status.CREATED)
+                .entity(studentService.createStudent(studentEntity))
+                .build();
     }
 
     @GET
@@ -52,16 +57,17 @@ public class StudentController {
     @PUT
     @Path("/{id}")
     @Transactional
+    @RolesAllowed("User")
     public Response updateStudent(
-                @PathParam("id") UUID studentId, 
-                StudentEntity studentEntity
-            ) {
+            @PathParam("id") UUID studentId,
+            StudentEntity studentEntity) {
         return Response.ok(studentService.updateStudent(studentId, studentEntity)).build();
     }
 
     @DELETE
     @Path("/{id}")
     @Transactional
+    @RolesAllowed("User")
     public Response deleteStudent(@PathParam("id") UUID studentId) {
         studentService.deleteStudent(studentId);
         return Response.ok("Student successfully deleted!").build();

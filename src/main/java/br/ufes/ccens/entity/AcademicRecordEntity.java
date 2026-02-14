@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -30,5 +32,7 @@ public class AcademicRecordEntity {
     //A situação final do aluno (ex: "APPROVED", "RECALLED", "FAILED")
     private String status;
 
-    private UUID studentId;
+    @OneToOne
+    @JoinColumn(name = "studentId", nullable = false)
+    private StudentEntity studentId;
 }

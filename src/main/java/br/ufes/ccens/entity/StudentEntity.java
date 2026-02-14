@@ -3,14 +3,18 @@ package br.ufes.ccens.entity;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+
+import org.hibernate.validator.constraints.br.CPF;
 
 @Entity
 @Table(name = "tb_student")
@@ -19,24 +23,32 @@ public class StudentEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID studentId;
 
+    @NotBlank(message = "O nome é obrigatório")
     private String name;
 
+    @Column(unique = true, nullable = false)
+    @Email(message = "Formato de email inválido")
+    @NotBlank(message = "O email é obrigatório")
     private String email;
 
+    @NotBlank(message = "A senha é obrigatório")
     private String password;
 
+    @NotBlank(message = "O número de matrícula é obrigatório")
     private String registration;
 
+    @NotNull(message = "A data de admissão é obrigatório")
+    @Past
     private LocalDate admissionDate;
 
+    @NotNull(message = "A data de nascimento é obrigatório")
+    @Past
     private LocalDate birthDate;
 
-    //especificar melhor o formato do cpf
+    @Column(unique = true, nullable = false, length = 14)
+    @CPF(message = "CPF inválido")
+    @NotBlank(message = "O CPF é obrigatório")
     private String cpf;
-
-    @OneToOne
-    @JoinColumn(name = "academicRecordId", nullable = false)
-    private AcademicRecordEntity academicRecordEntity;
     
     public StudentEntity() {}
 
