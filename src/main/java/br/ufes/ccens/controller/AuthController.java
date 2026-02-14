@@ -15,7 +15,7 @@ import jakarta.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @PermitAll
 public class AuthController {
-    
+   
     private final AuthService authService;
 
     public AuthController(AuthService authService) {

@@ -37,10 +37,12 @@ public class AcademicRecordController {
 
     @POST
     @RolesAllowed("User")
-    public Response create(AcademicRecordEntity record) {
-        service.create(record);
-        return Response.status(Response.Status.CREATED).build();
+    public Response create(List<AcademicRecordEntity> records) {
+    for (AcademicRecordEntity record : records) {
+        service.create(record); 
     }
+    return Response.status(Response.Status.CREATED).build();
+}
 
     @GET
     @Path("/student/{studentId}")
@@ -48,6 +50,14 @@ public class AcademicRecordController {
     public Response getByStudent(@PathParam("studentId") UUID studentId) {
         List<AcademicRecordEntity> records = service.listByStudent(studentId);
         return Response.ok(records).build();
+    }
+
+    @GET
+    @Path("/summary/{studentId}")
+    @RolesAllowed("User")
+    public Response getSummary(@PathParam("studentId") UUID studentId) {
+        String summary = service.getStudentSummary(studentId);
+        return Response.ok("{\"summary\":\"" + summary + "\"}").build();
     }
 
     @DELETE

@@ -28,4 +28,8 @@ public class AcademicRecordRepository implements PanacheRepositoryBase<AcademicR
     public List<AcademicRecordEntity> findByStudentName(String name) {
         return find("student.name LIKE ?1", "%" + name + "%").list();
     }
+
+    public List<AcademicRecordEntity> findByStudentId(UUID studentId) {
+        return find("student.studentId", studentId).list();
+    }
 }
