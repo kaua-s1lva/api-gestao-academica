@@ -30,7 +30,10 @@ public class StudentService {
         }
     }
 
-    public List<StudentEntity> listAll(Integer page, Integer pageSize) {
+    public List<StudentEntity> listAll(Integer page, Integer pageSize, String name) {
+        if (name != null && !name.isBlank()){
+            return studentRepository.findByName(name, page, pageSize);
+        }
         return studentRepository.findAll()
             .page(page, pageSize)
             .list();

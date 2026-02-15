@@ -34,8 +34,9 @@ public class StudentController {
     @GET
     public Response listAll(
             @QueryParam("page") @DefaultValue("0") Integer page,
-            @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
-        var students = studentService.listAll(page, pageSize);
+            @QueryParam("pageSize") @DefaultValue("10") Integer pageSize,
+            @QueryParam("name") String name) {
+        var students = studentService.listAll(page, pageSize, name);
         return Response.ok(students).build();
     }
 
