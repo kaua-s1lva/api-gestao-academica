@@ -65,7 +65,7 @@ public class StudentEntity {
     }
 
     public void setEmail(String email) {
-        if (!email.endsWith("@edu.ufes.br")) 
+        //if (email.endsWith("@edu.ufes.br"))
         this.email = email;
     }
 
