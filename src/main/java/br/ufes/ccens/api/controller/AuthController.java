@@ -1,11 +1,13 @@
 package br.ufes.ccens.api.controller;
 
-import br.ufes.ccens.api.dto.request.LoginStudentRequest;
+import br.ufes.ccens.api.dto.request.LoginUserRequest;
+import br.ufes.ccens.api.dto.request.RegisterUserRequest;
 import br.ufes.ccens.core.service.AuthService;
-import br.ufes.ccens.data.entity.StudentEntity;
 import br.ufes.ccens.data.entity.UserEntity;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -16,7 +18,6 @@ import jakarta.ws.rs.core.Response;
 @Path("/auth")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@PermitAll
 public class AuthController {
 
     private final AuthService authService;
@@ -27,16 +28,17 @@ public class AuthController {
 
     @POST
     @Path("/login")
-    public Response login(LoginStudentRequest loginRequest) {
+    @PermitAll
+    public Response login(@Valid LoginUserRequest loginRequest) {
         var tokenResponse = authService.login(loginRequest);
         return Response.ok(tokenResponse).build();
     }
 
-    //VAMOS CRIAR UMA ROTA PARA QUALQUER USUÁRIO ACESSAR O SISTEMA?
     @POST
     @Path("/register")
     @Transactional
-    public Response register(UserEntity studentEntity) {
+    @RolesAllowed("ADMIN")
+    public Response register(@Valid RegisterUserRequest studentEntity) {
         var student = authService.register(studentEntity);
         return Response.status(Response.Status.CREATED).entity(student).build();
     }

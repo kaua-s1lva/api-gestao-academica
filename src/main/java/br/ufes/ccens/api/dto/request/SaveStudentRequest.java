@@ -17,9 +17,6 @@ public record SaveStudentRequest (
     @Email(message = "Formato de email inválido")
     String email,
 
-    @NotBlank(message = "A senha é obrigatório")
-    String password,
-
     @NotBlank(message = "O número de matrícula é obrigatório")
     String registration,
 

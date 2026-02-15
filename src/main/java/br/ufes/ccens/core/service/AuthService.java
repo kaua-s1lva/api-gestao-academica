@@ -1,11 +1,11 @@
 package br.ufes.ccens.core.service;
 
-import br.ufes.ccens.api.dto.request.LoginStudentRequest;
+import br.ufes.ccens.api.dto.request.LoginUserRequest;
+import br.ufes.ccens.api.dto.request.RegisterUserRequest;
 import br.ufes.ccens.api.dto.response.TokenResponse;
+import br.ufes.ccens.api.mapper.UserMapper;
 import br.ufes.ccens.common.util.GenerateToken;
-import br.ufes.ccens.data.entity.StudentEntity;
 import br.ufes.ccens.data.entity.UserEntity;
-import br.ufes.ccens.data.repository.StudentRepository;
 import br.ufes.ccens.data.repository.UserRepository;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,13 +17,15 @@ public class AuthService {
 
     private final GenerateToken generateToken;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public AuthService(GenerateToken generateToken, UserRepository userRepository) {
+    public AuthService(GenerateToken generateToken, UserRepository userRepository, UserMapper userMapper) {
         this.generateToken = generateToken;
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
-    public TokenResponse login(LoginStudentRequest loginRequest) {
+    public TokenResponse login(LoginUserRequest loginRequest) {
         UserEntity user = userRepository.find("email", loginRequest.email()).firstResult();
 
         if (user == null) {
@@ -38,8 +40,9 @@ public class AuthService {
         return new TokenResponse(token);
     }
 
-    public UserEntity register(UserEntity userEntity) {
-        // Verificar se ja existe um estudante com esse email
+    public UserEntity register(RegisterUserRequest registerRequest) {
+        UserEntity userEntity = userMapper.toEntity(registerRequest); 
+
         UserEntity existing = userRepository.find("email", userEntity.getEmail()).firstResult();
         if (existing != null) {
             throw new WebApplicationException("E-mail ja cadastrado", Response.Status.CONFLICT);
