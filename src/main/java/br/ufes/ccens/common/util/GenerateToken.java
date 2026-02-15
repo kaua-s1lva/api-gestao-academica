@@ -6,7 +6,7 @@ import java.util.HashSet;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.Claims;
 
-import br.ufes.ccens.data.entity.StudentEntity;
+import br.ufes.ccens.data.entity.UserEntity;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -22,10 +22,11 @@ public class GenerateToken {
     /**
      * Generates and prints a JWT token.
      */
-    public String generateToken(StudentEntity student) {
-        String token = Jwt.issuer(issuer) 
+    public String generateToken(UserEntity student) {
+        String token = Jwt.issuer(issuer)
+                .subject(student.getUserId().toString())
                 .upn(student.getEmail()) 
-                .groups(new HashSet<>(Arrays.asList("User"))) 
+                .groups(new HashSet<>(Arrays.asList("User"))) // Depois você pode trocar isso pelo student.getRole().name()
                 .claim(Claims.birthdate.name(), "2001-07-13") 
                 .sign();
 

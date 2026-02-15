@@ -1,9 +1,9 @@
 package br.ufes.ccens.data.db.seeder;
 
-import java.time.LocalDate;
-
-import br.ufes.ccens.data.entity.StudentEntity;
-import br.ufes.ccens.data.repository.StudentRepository;
+import br.ufes.ccens.data.entity.UserEntity;
+import br.ufes.ccens.data.entity.enums.RoleUserEnum;
+import br.ufes.ccens.data.repository.UserRepository;
+import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
@@ -13,34 +13,27 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
 @ApplicationScoped
-public class StudentSeeder {
-
+public class UserSeeder {
     @Inject
-    StudentRepository studentRepository;
+    UserRepository userRepository;
 
     @Transactional
     public void onStart(@Observes StartupEvent ev) {
         System.out.println(">>> SEEDER: Iniciando verificação...");
 
-        if (studentRepository.count() > 0) {
+        if (userRepository.count() > 0) {
             System.out.println(">>> SEEDER: Banco já tem dados. Pulando.");
             return;
         }
 
         try {
-            StudentEntity student = new StudentEntity();
-            student.setName("maik mau fredo");
-            student.setEmail("maik.maufredo@edu.ufes.br");
-            student.setAdmissionDate(LocalDate.parse("2022-10-01"));
-            student.setRegistration("2022200556");
-            student.setBirthDate(LocalDate.parse("2000-01-01"));
-            
-            // CPF Válido para teste (Gerado aleatoriamente)
-            student.setCpf("61328198006");
+            UserEntity user = new UserEntity();
+            user.setName("admin");
+            user.setEmail("admin@email.com");
+            user.setPassword(BcryptUtil.bcryptHash("admin123"));
+            user.setRole(RoleUserEnum.ADMIN);
 
-            // Persiste e FORÇA o envio pro banco agora para testar erros
-            studentRepository.persist(student);
-            studentRepository.flush(); 
+            userRepository.persistAndFlush(user);
 
             System.out.println(">>> SEEDER: Usuário criado com sucesso!");
 
@@ -55,16 +48,4 @@ public class StudentSeeder {
             e.printStackTrace();
         }
     }
-    /*
-
-
-
-
-
-
-
-
-
-    //especificar melhor o formato do cpf
-    private String cpf; */
 }

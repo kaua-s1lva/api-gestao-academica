@@ -16,9 +16,11 @@ import jakarta.validation.constraints.Past;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+import br.ufes.ccens.data.entity.audity.BaseAuditEntity;
+
 @Entity
 @Table(name = "tb_student")
-public class StudentEntity {
+public class StudentEntity extends BaseAuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID studentId;
@@ -30,9 +32,6 @@ public class StudentEntity {
     @Email(message = "Formato de email inválido")
     @NotBlank(message = "O email é obrigatório")
     private String email;
-
-    @NotBlank(message = "A senha é obrigatório")
-    private String password;
 
     @NotBlank(message = "O número de matrícula é obrigatório")
     private String registration;
@@ -67,14 +66,6 @@ public class StudentEntity {
     public void setEmail(String email) {
         //if (email.endsWith("@edu.ufes.br"))
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public void setRegistration(String registration) {
