@@ -1,9 +1,9 @@
 package br.ufes.ccens.service;
 
+import br.ufes.ccens.dto.request.LoginStudentRequest;
+import br.ufes.ccens.dto.response.TokenResponse;
 import br.ufes.ccens.entity.StudentEntity;
 import br.ufes.ccens.repository.StudentRepository;
-import br.ufes.ccens.request.LoginRequest;
-import br.ufes.ccens.response.TokenResponse;
 import br.ufes.ccens.util.GenerateToken;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -21,7 +21,7 @@ public class AuthService {
         this.studentRepository = studentRepository;
     }
 
-    public TokenResponse login(LoginRequest loginRequest) {
+    public TokenResponse login(LoginStudentRequest loginRequest) {
         StudentEntity student = studentRepository.find("email", loginRequest.email()).firstResult();
 
         if (student == null) {
