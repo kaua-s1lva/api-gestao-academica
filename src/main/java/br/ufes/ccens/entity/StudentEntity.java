@@ -3,6 +3,8 @@ package br.ufes.ccens.entity;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,8 +15,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-
-import org.hibernate.validator.constraints.br.CPF;
 
 @Entity
 @Table(name = "tb_student")
@@ -65,8 +65,9 @@ public class StudentEntity {
     }
 
     public void setEmail(String email) {
-        if (!email.endsWith("@edu.ufes.br")) 
+        //if (email.endsWith("@edu.ufes.br"))
         this.email = email;
+        
     }
 
     public String getPassword() {
