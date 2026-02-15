@@ -3,6 +3,8 @@ package br.ufes.ccens.data.entity;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -65,7 +67,9 @@ public class StudentEntity extends BaseAuditEntity {
 
     public void setEmail(String email) {
         //if (email.endsWith("@edu.ufes.br"))
+        //if (email.endsWith("@edu.ufes.br"))
         this.email = email;
+        
     }
 
     public void setRegistration(String registration) {
