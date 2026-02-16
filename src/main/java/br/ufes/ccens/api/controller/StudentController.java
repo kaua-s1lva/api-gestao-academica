@@ -3,10 +3,11 @@ package br.ufes.ccens.api.controller;
 import java.util.UUID;
 
 import br.ufes.ccens.api.dto.request.SaveStudentRequest;
+import br.ufes.ccens.api.dto.request.UpdateStudentRequest;
 import br.ufes.ccens.core.service.StudentService;
 import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
@@ -50,9 +51,8 @@ public class StudentController {
     }
 
     @POST
-    @Transactional
     @RolesAllowed("ADMIN")
-    public Response createStudent(SaveStudentRequest studentRequest) {
+    public Response createStudent(@Valid SaveStudentRequest studentRequest) {
         return Response.status(Response.Status.CREATED)
                 .entity(studentService.createStudent(studentRequest))
                 .build();
@@ -66,17 +66,15 @@ public class StudentController {
 
     @PUT
     @Path("/{id}")
-    @Transactional
     @RolesAllowed("ADMIN")
     public Response updateStudent(
             @PathParam("id") UUID studentId,
-            SaveStudentRequest studentRequest) {
+            @Valid UpdateStudentRequest studentRequest) {
         return Response.ok(studentService.updateStudent(studentId, studentRequest)).build();
     }
 
     @DELETE
     @Path("/{id}")
-    @Transactional
     @RolesAllowed("ADMIN")
     public Response deleteStudent(@PathParam("id") UUID studentId) {
         studentService.deleteStudent(studentId);

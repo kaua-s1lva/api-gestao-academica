@@ -1,6 +1,7 @@
-package br.ufes.ccens.core.exception;
+package br.ufes.ccens.api.exception;
 
 import br.ufes.ccens.api.dto.response.ErrorResponse;
+import br.ufes.ccens.core.exception.InvalidCredentialsException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;

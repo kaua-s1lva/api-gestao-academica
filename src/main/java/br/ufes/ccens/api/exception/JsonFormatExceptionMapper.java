@@ -1,4 +1,4 @@
-package br.ufes.ccens.core.exception;
+package br.ufes.ccens.api.exception;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

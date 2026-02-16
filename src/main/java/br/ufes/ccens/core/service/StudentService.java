@@ -1,24 +1,32 @@
 package br.ufes.ccens.core.service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import java.util.UUID;
 
 import org.jboss.logging.Logger;
 
 import br.ufes.ccens.api.dto.request.SaveStudentRequest;
+import br.ufes.ccens.api.dto.request.UpdateStudentRequest;
 import br.ufes.ccens.api.dto.response.StudentResponse;
 import br.ufes.ccens.api.mapper.StudentMapper;
 import br.ufes.ccens.core.exception.DuplicateResourceException;
-import br.ufes.ccens.core.exception.StudentNotFoundException;
+import br.ufes.ccens.core.exception.ResourceNotFoundException;
 import br.ufes.ccens.data.entity.StudentEntity;
 import br.ufes.ccens.data.repository.StudentRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
+    private static final DateTimeFormatter MULTI_FORMATTER = new DateTimeFormatterBuilder()
+            .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE)
+            .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+            .toFormatter();
     private static final Logger LOG = Logger.getLogger(StudentService.class);
 
     public StudentService(StudentRepository studentRepository, StudentMapper studentMapper) {
@@ -26,6 +34,7 @@ public class StudentService {
         this.studentMapper = studentMapper;
     }
 
+    @Transactional
     public StudentResponse createStudent(SaveStudentRequest studentRequest) {
         var studentEntity = studentMapper.toEntity(studentRequest);
         var existingEmail = studentRepository.find("email", studentEntity.getEmail()).firstResult();
@@ -48,6 +57,8 @@ public class StudentService {
     }
 
     private LocalDate parseDate(String dateStr) {
+        /*
+        
         if (dateStr == null || dateStr.isBlank()) {
             return null;
         }
@@ -66,6 +77,9 @@ public class StudentService {
                 throw new RuntimeException("Formato de data inválido [" + dateStr + "]. Use AAAA-MM-DD ou DD/MM/AAAA");
             }
         }
+            */
+        if (dateStr == null || dateStr.isBlank()) return null;
+        return LocalDate.parse(dateStr, MULTI_FORMATTER);
     }
 
     public List<StudentResponse> listAll(Integer page, Integer pageSize, String name, String email, String registration, String cpf,
@@ -93,15 +107,14 @@ public class StudentService {
 
     public StudentResponse findById(UUID studentId) {
         LOG.info("Buscando estudante pelo ID: " + studentId);
-        var student = studentRepository.findByIdOptional(studentId)
-            .orElseThrow(StudentNotFoundException::new);
+        var student = getStudentEntity(studentId);
         return studentMapper.toResponse(student);
     }
 
-    public StudentResponse updateStudent(UUID studentId, SaveStudentRequest studentRequest) {
+    @Transactional
+    public StudentResponse updateStudent(UUID studentId, UpdateStudentRequest studentRequest) {
         LOG.info("Atualizando dados do estudante ID: " + studentId);
-        var studentEntity = studentRepository.findByIdOptional(studentId)
-            .orElseThrow(StudentNotFoundException::new);
+        var studentEntity = getStudentEntity(studentId);
         
         var newStudent = studentMapper.toEntity(studentRequest);
 
@@ -112,7 +125,20 @@ public class StudentService {
             studentEntity.setRegistration(newStudent.getRegistration());
         }
         if (newStudent.getCpf() != null && !newStudent.getCpf().isBlank()) {
+            var existingCpf = studentRepository.find("cpf", newStudent.getCpf()).firstResult();
+            if (existingCpf != null && !existingCpf.getStudentId().equals(studentId)) {
+                LOG.error("Tentativa de uso de CPF já cadastrado por outro estudante");
+                throw new DuplicateResourceException("CPF já cadastrado.");
+            }
             studentEntity.setCpf(newStudent.getCpf());
+        }
+        if (newStudent.getEmail() != null && !newStudent.getEmail().isBlank()) {
+            var existingEmail = studentRepository.find("email", newStudent.getEmail()).firstResult();
+            if (existingEmail != null && !existingEmail.getStudentId().equals(studentId)) {
+                LOG.error("Tentativa de uso de e-mail já cadastrado por outro estudante");
+                throw new DuplicateResourceException("E-mail já cadastrado.");
+            }
+            studentEntity.setEmail(newStudent.getEmail());
         }
         if (newStudent.getAdmissionDate() != null) {
             studentEntity.setAdmissionDate(newStudent.getAdmissionDate());
@@ -126,10 +152,15 @@ public class StudentService {
         return studentMapper.toResponse(studentEntity);
     }
 
+    @Transactional
     public void deleteStudent(UUID studentId) {
         LOG.info("Solicitação de exclusão para o estudante ID: " + studentId);
-        var student = studentRepository.findByIdOptional(studentId)
-            .orElseThrow(StudentNotFoundException::new);
+        var student = getStudentEntity(studentId);
         studentRepository.deleteById(student.getStudentId());
+    }
+
+    private StudentEntity getStudentEntity(UUID studentId) {
+        return studentRepository.findByIdOptional(studentId)
+            .orElseThrow(() -> new ResourceNotFoundException("Estudante não encontrado com o ID fornecido."));
     }
 }

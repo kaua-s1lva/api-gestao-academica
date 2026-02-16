@@ -11,6 +11,7 @@ import br.ufes.ccens.core.exception.InvalidCredentialsException;
 import br.ufes.ccens.data.repository.UserRepository;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class AuthService {
@@ -36,6 +37,7 @@ public class AuthService {
         return new TokenResponse(token);
     }
 
+    @Transactional
     public RegisterUserResponse register(RegisterUserRequest registerRequest) {
         var userEntity = userMapper.toEntity(registerRequest);
 
