@@ -7,7 +7,9 @@ import java.util.UUID;
 import org.jboss.logging.Logger;
 
 import br.ufes.ccens.api.dto.request.SaveStudentRequest;
+import br.ufes.ccens.api.dto.response.StudentResponse;
 import br.ufes.ccens.api.mapper.StudentMapper;
+import br.ufes.ccens.core.exception.DuplicateResourceException;
 import br.ufes.ccens.core.exception.StudentNotFoundException;
 import br.ufes.ccens.data.entity.StudentEntity;
 import br.ufes.ccens.data.repository.StudentRepository;
@@ -24,16 +26,25 @@ public class StudentService {
         this.studentMapper = studentMapper;
     }
 
-    public StudentEntity createStudent(SaveStudentRequest studentRequest) {
-        try {
-            var studentEntity = studentMapper.toEntity(studentRequest);
-            studentRepository.persistAndFlush(studentEntity);
-            LOG.info("Estudante criado com sucesso: " + studentEntity.getStudentId());
-            return studentEntity;
-        } catch (Exception e) {
-            LOG.error("Erro ao criar estudante: " + e.getMessage());
-            throw new RuntimeException("Erro ao criar usuário: " + e.getMessage());
+    public StudentResponse createStudent(SaveStudentRequest studentRequest) {
+        var studentEntity = studentMapper.toEntity(studentRequest);
+        var existingEmail = studentRepository.find("email", studentEntity.getEmail()).firstResult();
+
+        if (existingEmail != null) {
+            LOG.error("Email já cadastrado");
+            throw new DuplicateResourceException("Email já cadastrado");
         }
+
+        var existingCpf = studentRepository.find("cpf", studentEntity.getCpf()).firstResult();
+
+        if (existingCpf != null) {
+            LOG.error("Cpf já cadastrado");
+            throw new DuplicateResourceException("Cpf já cadastrado");
+        }
+
+        studentRepository.persistAndFlush(studentEntity);
+        LOG.info("Estudante criado com sucesso: " + studentEntity.getStudentId());
+        return studentMapper.toResponse(studentEntity);
     }
 
     private LocalDate parseDate(String dateStr) {
@@ -57,50 +68,68 @@ public class StudentService {
         }
     }
 
-    public List<StudentEntity> listAll(Integer page, Integer pageSize, String name, String email, String registration, String cpf,
+    public List<StudentResponse> listAll(Integer page, Integer pageSize, String name, String email, String registration, String cpf,
                                   String admStart, String admEnd, String birthStart, String birthEnd) {
         LocalDate admissionStart = parseDate(admStart);
         LocalDate admissionEnd = parseDate(admEnd);
         LocalDate birthStartDate = parseDate(birthStart);
         LocalDate birthEndDate = parseDate(birthEnd);
 
+        List<StudentEntity> students;
+
         if (name != null || email != null || registration != null || cpf != null || admissionStart != null || birthStartDate != null) {
-        
             LOG.info("Realizando busca com filtros inseridos");
-            return studentRepository.findWithFilters(name, email, registration, cpf, admissionStart, 
+            students = studentRepository.findWithFilters(name, email, registration, cpf, admissionStart, 
                         admissionEnd, birthStartDate, birthEndDate, page, pageSize);
+        } else {
+            LOG.info("Listando todos os estudantes (sem filtros)");
+            students = studentRepository.findAll().page(page, pageSize).list();
         }
 
-        LOG.info("Listando todos os estudantes (sem filtros)");
-        return studentRepository.findAll().page(page, pageSize).list();
+        return students.stream()
+                .map(studentMapper::toResponse)
+                .toList();
     }
 
-    public StudentEntity findById(UUID studentId) {
+    public StudentResponse findById(UUID studentId) {
         LOG.info("Buscando estudante pelo ID: " + studentId);
-        return studentRepository.findByIdOptional(studentId)
+        var student = studentRepository.findByIdOptional(studentId)
             .orElseThrow(StudentNotFoundException::new);
+        return studentMapper.toResponse(student);
     }
 
-    public StudentEntity updateStudent(UUID studentId, SaveStudentRequest studentRequest) {
+    public StudentResponse updateStudent(UUID studentId, SaveStudentRequest studentRequest) {
         LOG.info("Atualizando dados do estudante ID: " + studentId);
-        var student = findById(studentId);
+        var studentEntity = studentRepository.findByIdOptional(studentId)
+            .orElseThrow(StudentNotFoundException::new);
         
-        var studentEntity = studentMapper.toEntity(studentRequest);
+        var newStudent = studentMapper.toEntity(studentRequest);
 
-        student.setName(studentEntity.getName());
-        student.setRegistration(studentEntity.getRegistration());
-        student.setAdmissionDate(studentEntity.getAdmissionDate());
-        student.setBirthDate(studentEntity.getBirthDate());
-        student.setCpf(studentEntity.getCpf());
+        if (newStudent.getName() != null && !newStudent.getName().isBlank()) {
+            studentEntity.setName(newStudent.getName());
+        }
+        if (newStudent.getRegistration() != null && !newStudent.getRegistration().isBlank()) {
+            studentEntity.setRegistration(newStudent.getRegistration());
+        }
+        if (newStudent.getCpf() != null && !newStudent.getCpf().isBlank()) {
+            studentEntity.setCpf(newStudent.getCpf());
+        }
+        if (newStudent.getAdmissionDate() != null) {
+            studentEntity.setAdmissionDate(newStudent.getAdmissionDate());
+        }
+        if (newStudent.getBirthDate() != null) {
+            studentEntity.setBirthDate(newStudent.getBirthDate());
+        }
 
-        studentRepository.persist(student);
+        studentRepository.persist(studentEntity);
 
-        return student;
+        return studentMapper.toResponse(studentEntity);
     }
 
     public void deleteStudent(UUID studentId) {
         LOG.info("Solicitação de exclusão para o estudante ID: " + studentId);
-        var student = findById(studentId);
+        var student = studentRepository.findByIdOptional(studentId)
+            .orElseThrow(StudentNotFoundException::new);
         studentRepository.deleteById(student.getStudentId());
     }
 }

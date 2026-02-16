@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.ufes.ccens.api.dto.request.SaveStudentRequest;
+import br.ufes.ccens.api.dto.request.StudentRequest;
 import br.ufes.ccens.api.mapper.StudentMapper;
 import br.ufes.ccens.core.service.StudentService;
 import br.ufes.ccens.data.entity.StudentEntity;
@@ -37,7 +37,7 @@ public class StudentServiceTest {
     @Test
     void CreateStudent_DadosValidos_PersistAndFlushEstudante() {
         @SuppressWarnings("null")
-        SaveStudentRequest request = mock(SaveStudentRequest.class);
+        StudentRequest request = mock(StudentRequest.class);
         StudentEntity entity = new StudentEntity();
         entity.setStudentId(UUID.randomUUID());
 
@@ -53,7 +53,7 @@ public class StudentServiceTest {
     @Test
     void CreateStudent_ErroNoBancoDeDados_LancaRuntimeException() {
         @SuppressWarnings("null")
-        SaveStudentRequest request = mock(SaveStudentRequest.class);
+        StudentRequest request = mock(StudentRequest.class);
         when(studentMapper.toEntity(request)).thenReturn(new StudentEntity());
         
         doThrow(new RuntimeException("Erro de conexão")).when(studentRepository).persistAndFlush(any());
