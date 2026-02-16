@@ -36,17 +36,15 @@ public class StudentServiceTest {
 
     @Test
     void CreateStudent_DadosValidos_PersistAndFlushEstudante() {
-        // Cenário (Given)
+        @SuppressWarnings("null")
         SaveStudentRequest request = mock(SaveStudentRequest.class);
         StudentEntity entity = new StudentEntity();
         entity.setStudentId(UUID.randomUUID());
 
         when(studentMapper.toEntity(request)).thenReturn(entity);
 
-        // Ação (When)
         StudentEntity resultado = studentService.createStudent(request);
 
-        // Verificação (Then)
         assertNotNull(resultado);
         assertEquals(entity.getStudentId(), resultado.getStudentId());
         verify(studentRepository, times(1)).persistAndFlush(any(StudentEntity.class));
@@ -54,14 +52,12 @@ public class StudentServiceTest {
 
     @Test
     void CreateStudent_ErroNoBancoDeDados_LancaRuntimeException() {
-        // Cenário (Given)
+        @SuppressWarnings("null")
         SaveStudentRequest request = mock(SaveStudentRequest.class);
         when(studentMapper.toEntity(request)).thenReturn(new StudentEntity());
         
-        // Forçamos o repositório a jogar uma exceção (simulando erro de banco)
         doThrow(new RuntimeException("Erro de conexão")).when(studentRepository).persistAndFlush(any());
 
-        // Ação & Verificação (When & Then)
         assertThrows(RuntimeException.class, () -> {
             studentService.createStudent(request);
         });
