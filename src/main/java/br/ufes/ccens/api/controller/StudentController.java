@@ -34,14 +34,24 @@ public class StudentController {
     @GET
     public Response listAll(
             @QueryParam("page") @DefaultValue("0") Integer page,
-            @QueryParam("pageSize") @DefaultValue("10") Integer pageSize) {
-        var students = studentService.listAll(page, pageSize);
+            @QueryParam("pageSize") @DefaultValue("10") Integer pageSize,
+            @QueryParam("name") String name,
+            @QueryParam("email") String email,
+            @QueryParam("registration") String registration,
+            @QueryParam("cpf") String cpf,
+            @QueryParam("admStart") String admStart,
+            @QueryParam("admEnd") String admEnd,
+            @QueryParam("birthStart") String birthStart,
+            @QueryParam("birthEnd") String birthEnd) {
+        
+        var students = studentService.listAll(page, pageSize, name, email, registration, cpf, 
+            admStart, admEnd, birthStart, birthEnd);
         return Response.ok(students).build();
     }
 
     @POST
     @Transactional
-    @RolesAllowed("User")
+    @RolesAllowed("ADMIN")
     public Response createStudent(SaveStudentRequest studentRequest) {
         return Response.status(Response.Status.CREATED)
                 .entity(studentService.createStudent(studentRequest))
@@ -57,7 +67,7 @@ public class StudentController {
     @PUT
     @Path("/{id}")
     @Transactional
-    @RolesAllowed("User")
+    @RolesAllowed("ADMIN")
     public Response updateStudent(
             @PathParam("id") UUID studentId,
             SaveStudentRequest studentRequest) {
@@ -67,7 +77,7 @@ public class StudentController {
     @DELETE
     @Path("/{id}")
     @Transactional
-    @RolesAllowed("User")
+    @RolesAllowed("ADMIN")
     public Response deleteStudent(@PathParam("id") UUID studentId) {
         studentService.deleteStudent(studentId);
         return Response.ok("Student successfully deleted!").build();

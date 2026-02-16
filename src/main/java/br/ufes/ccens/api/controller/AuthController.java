@@ -3,7 +3,6 @@ package br.ufes.ccens.api.controller;
 import br.ufes.ccens.api.dto.request.LoginUserRequest;
 import br.ufes.ccens.api.dto.request.RegisterUserRequest;
 import br.ufes.ccens.core.service.AuthService;
-import br.ufes.ccens.data.entity.UserEntity;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
