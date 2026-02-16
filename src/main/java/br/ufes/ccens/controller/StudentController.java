@@ -1,5 +1,6 @@
 package br.ufes.ccens.controller;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import br.ufes.ccens.dto.request.SaveStudentRequest;
@@ -35,8 +36,17 @@ public class StudentController {
     public Response listAll(
             @QueryParam("page") @DefaultValue("0") Integer page,
             @QueryParam("pageSize") @DefaultValue("10") Integer pageSize,
-            @QueryParam("name") String name) {
-        var students = studentService.listAll(page, pageSize, name);
+            @QueryParam("name") String name,
+            @QueryParam("email") String email,
+            @QueryParam("registration") String registration,
+            @QueryParam("cpf") String cpf,
+            @QueryParam("admStart") String admStart,
+            @QueryParam("admEnd") String admEnd,
+            @QueryParam("birthStart") String birthStart,
+            @QueryParam("birthEnd") String birthEnd) {
+        
+        var students = studentService.listAll(page, pageSize, name, email, registration, cpf, 
+            admStart, admEnd, birthStart, birthEnd);
         return Response.ok(students).build();
     }
 

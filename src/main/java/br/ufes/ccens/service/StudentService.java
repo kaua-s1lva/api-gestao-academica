@@ -1,5 +1,7 @@
 package br.ufes.ccens.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,20 +32,48 @@ public class StudentService {
             LOG.info("Estudante criado com sucesso: " + studentEntity.getStudentId());
             return studentEntity;
         } catch (Exception e) {
-            LOG.error("Falha ao criar estudante: " + e.getMessage());
+            LOG.error("Erro ao criar estudante: " + e.getMessage());
             throw new RuntimeException("Erro ao criar usuário: " + e.getMessage());
         }
     }
 
-    public List<StudentEntity> listAll(Integer page, Integer pageSize, String name) {
-        if (name != null && !name.isBlank()){
-            LOG.info("Buscando estudante pelo nome: " + name);
-            return studentRepository.findByName(name, page, pageSize);
+    private LocalDate parseDate(String dateStr) {
+        if (dateStr == null || dateStr.isBlank()) {
+            return null;
         }
-        LOG.info("Listando todos os estudantes");
-        return studentRepository.findAll()
-            .page(page, pageSize)
-            .list();
+
+        try {
+            // Tenta o padrão ISO (2026-02-15) - Padrão internacional
+            return LocalDate.parse(dateStr);
+        } catch (Exception e) {
+            try {
+                // Se falhar, tenta o padrão brasileiro (15/02/2026)
+                var brFormatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                return LocalDate.parse(dateStr, brFormatter);
+            } catch (Exception e2) {
+                // Se falhar nos dois, avisa o erro
+                LOG.error("Erro ao converter data: " + dateStr);
+                throw new RuntimeException("Formato de data inválido [" + dateStr + "]. Use AAAA-MM-DD ou DD/MM/AAAA");
+            }
+        }
+    }
+
+    public List<StudentEntity> listAll(Integer page, Integer pageSize, String name, String email, String registration, String cpf,
+                                  String admStart, String admEnd, String birthStart, String birthEnd) {
+        LocalDate admissionStart = parseDate(admStart);
+        LocalDate admissionEnd = parseDate(admEnd);
+        LocalDate birthStartDate = parseDate(birthStart);
+        LocalDate birthEndDate = parseDate(birthEnd);
+
+        if (name != null || email != null || registration != null || cpf != null || admissionStart != null || birthStartDate != null) {
+        
+            LOG.info("Realizando busca com filtros inseridos");
+            return studentRepository.findWithFilters(name, email, registration, cpf, admissionStart, 
+                        admissionEnd, birthStartDate, birthEndDate, page, pageSize);
+        }
+
+        LOG.info("Listando todos os estudantes (sem filtros)");
+        return studentRepository.findAll().page(page, pageSize).list();
     }
 
     public StudentEntity findById(UUID studentId) {
