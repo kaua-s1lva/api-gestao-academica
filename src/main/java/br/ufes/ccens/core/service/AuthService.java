@@ -2,10 +2,10 @@ package br.ufes.ccens.core.service;
 
 import br.ufes.ccens.api.dto.request.LoginUserRequest;
 import br.ufes.ccens.api.dto.request.RegisterUserRequest;
+import br.ufes.ccens.api.dto.response.RegisterUserResponse;
 import br.ufes.ccens.api.dto.response.TokenResponse;
 import br.ufes.ccens.api.mapper.UserMapper;
 import br.ufes.ccens.common.util.GenerateToken;
-import br.ufes.ccens.data.entity.UserEntity;
 import br.ufes.ccens.data.repository.UserRepository;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -26,7 +26,7 @@ public class AuthService {
     }
 
     public TokenResponse login(LoginUserRequest loginRequest) {
-        UserEntity user = userRepository.find("email", loginRequest.email()).firstResult();
+        var user = userRepository.find("email", loginRequest.email()).firstResult();
 
         if (user == null) {
             throw new WebApplicationException("E-mail ou senha invalidos", Response.Status.UNAUTHORIZED);
@@ -40,18 +40,16 @@ public class AuthService {
         return new TokenResponse(token);
     }
 
-    public UserEntity register(RegisterUserRequest registerRequest) {
-        UserEntity userEntity = userMapper.toEntity(registerRequest); 
+    public RegisterUserResponse register(RegisterUserRequest registerRequest) {
+        var userEntity = userMapper.toEntity(registerRequest);
 
-        UserEntity existing = userRepository.find("email", userEntity.getEmail()).firstResult();
+        var existing = userRepository.find("email", userEntity.getEmail()).firstResult();
         if (existing != null) {
-            throw new WebApplicationException("E-mail ja cadastrado", Response.Status.CONFLICT);
+            throw new WebApplicationException("E-mail já cadastrado", Response.Status.CONFLICT);
         }
 
-        // Hash da senha antes de persistir
         userEntity.setPassword(BcryptUtil.bcryptHash(userEntity.getPassword()));
-
-        userRepository.persist(userEntity);
-        return userEntity;
+        userRepository.persistAndFlush(userEntity);
+        return userMapper.toResponse(userEntity);
     }
 }

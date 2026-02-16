@@ -38,8 +38,8 @@ public class AuthController {
     @Path("/register")
     @Transactional
     @RolesAllowed("ADMIN")
-    public Response register(@Valid RegisterUserRequest studentEntity) {
-        var student = authService.register(studentEntity);
+    public Response register(@Valid RegisterUserRequest studentRequest) {
+        var student = authService.register(studentRequest);
         return Response.status(Response.Status.CREATED).entity(student).build();
     }
 }

@@ -16,8 +16,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 
-import org.hibernate.validator.constraints.br.CPF;
-
 import br.ufes.ccens.data.entity.audity.BaseAuditEntity;
 
 @Entity
@@ -66,10 +64,7 @@ public class StudentEntity extends BaseAuditEntity {
     }
 
     public void setEmail(String email) {
-        //if (email.endsWith("@edu.ufes.br"))
-        //if (email.endsWith("@edu.ufes.br"))
         this.email = email;
-        
     }
 
     public void setRegistration(String registration) {
