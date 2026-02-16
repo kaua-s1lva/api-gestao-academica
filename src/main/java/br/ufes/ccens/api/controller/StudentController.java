@@ -1,6 +1,5 @@
 package br.ufes.ccens.api.controller;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 import br.ufes.ccens.api.dto.request.SaveStudentRequest;
@@ -52,7 +51,7 @@ public class StudentController {
 
     @POST
     @Transactional
-    @RolesAllowed("User")
+    @RolesAllowed("ADMIN")
     public Response createStudent(SaveStudentRequest studentRequest) {
         return Response.status(Response.Status.CREATED)
                 .entity(studentService.createStudent(studentRequest))
@@ -68,7 +67,7 @@ public class StudentController {
     @PUT
     @Path("/{id}")
     @Transactional
-    @RolesAllowed("User")
+    @RolesAllowed("ADMIN")
     public Response updateStudent(
             @PathParam("id") UUID studentId,
             SaveStudentRequest studentRequest) {
@@ -78,7 +77,7 @@ public class StudentController {
     @DELETE
     @Path("/{id}")
     @Transactional
-    @RolesAllowed("User")
+    @RolesAllowed("ADMIN")
     public Response deleteStudent(@PathParam("id") UUID studentId) {
         studentService.deleteStudent(studentId);
         return Response.ok("Student successfully deleted!").build();

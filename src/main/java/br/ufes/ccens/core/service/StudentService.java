@@ -1,11 +1,8 @@
 package br.ufes.ccens.core.service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
-
-import org.jboss.logging.Logger;
 
 import org.jboss.logging.Logger;
 
