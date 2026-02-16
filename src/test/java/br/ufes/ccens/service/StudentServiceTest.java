@@ -13,13 +13,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import br.ufes.ccens.api.dto.request.SaveStudentRequest;
+import br.ufes.ccens.api.mapper.StudentMapper;
+import br.ufes.ccens.core.service.StudentService;
+import br.ufes.ccens.data.entity.StudentEntity;
+import br.ufes.ccens.data.repository.StudentRepository;
+
 import java.time.LocalDate;
 import java.util.UUID;
-
-import br.ufes.ccens.repository.StudentRepository;
-import br.ufes.ccens.dto.request.SaveStudentRequest;
-import br.ufes.ccens.entity.StudentEntity;
-import br.ufes.ccens.mapper.StudentMapper;
 
 @ExtendWith(MockitoExtension.class)
 public class StudentServiceTest {
@@ -96,7 +97,7 @@ public class StudentServiceTest {
         
         when(studentRepository.findByIdOptional(idInexistente)).thenReturn(java.util.Optional.empty());
 
-        assertThrows(br.ufes.ccens.exception.StudentNotFoundException.class, () -> {
+        assertThrows(br.ufes.ccens.core.exception.StudentNotFoundException.class, () -> {
             studentService.findById(idInexistente);
         });
         
