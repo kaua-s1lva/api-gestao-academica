@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.ufes.ccens.api.dto.request.StudentRequest;
+import br.ufes.ccens.api.dto.request.SaveStudentRequest;
 import br.ufes.ccens.api.mapper.StudentMapper;
 import br.ufes.ccens.core.service.StudentService;
 import br.ufes.ccens.data.entity.StudentEntity;
@@ -37,13 +37,13 @@ public class StudentServiceTest {
     @Test
     void CreateStudent_DadosValidos_PersistAndFlushEstudante() {
         @SuppressWarnings("null")
-        StudentRequest request = mock(StudentRequest.class);
+        SaveStudentRequest request = mock(SaveStudentRequest.class);
         StudentEntity entity = new StudentEntity();
         entity.setStudentId(UUID.randomUUID());
 
         when(studentMapper.toEntity(request)).thenReturn(entity);
 
-        StudentEntity resultado = studentService.createStudent(request);
+        StudentEntity resultado = studentMapper.toEntity( studentService.createStudent(request) );
 
         assertNotNull(resultado);
         assertEquals(entity.getStudentId(), resultado.getStudentId());
@@ -53,7 +53,7 @@ public class StudentServiceTest {
     @Test
     void CreateStudent_ErroNoBancoDeDados_LancaRuntimeException() {
         @SuppressWarnings("null")
-        StudentRequest request = mock(StudentRequest.class);
+        SaveStudentRequest request = mock(SaveStudentRequest.class);
         when(studentMapper.toEntity(request)).thenReturn(new StudentEntity());
         
         doThrow(new RuntimeException("Erro de conexão")).when(studentRepository).persistAndFlush(any());
@@ -93,7 +93,7 @@ public class StudentServiceTest {
         
         when(studentRepository.findByIdOptional(idInexistente)).thenReturn(java.util.Optional.empty());
 
-        assertThrows(br.ufes.ccens.core.exception.StudentNotFoundException.class, () -> {
+        assertThrows(br.ufes.ccens.core.exception.ResourceNotFoundException.class, () -> {
             studentService.findById(idInexistente);
         });
         
