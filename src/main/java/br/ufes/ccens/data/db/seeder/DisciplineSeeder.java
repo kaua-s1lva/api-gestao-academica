@@ -1,15 +1,8 @@
 package br.ufes.ccens.data.db.seeder;
 
-import java.time.LocalDate;
-
-import br.ufes.ccens.data.entity.StudentEntity;
 import br.ufes.ccens.data.repository.StudentRepository;
-import io.quarkus.elytron.security.common.BcryptUtil;
-import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class DisciplineSeeder {
