@@ -17,17 +17,17 @@ import jakarta.validation.ConstraintViolationException;
 @ApplicationScoped
 public class UserSeeder {
     
-    private static final Logger LOG = Logger.getLogger(StudentSeeder.class);
+    private static final Logger LOG = Logger.getLogger(UserSeeder.class);
     
     @Inject
     UserRepository userRepository;
 
     @Transactional
     public void onStart(@Observes StartupEvent ev) {
-        LOG.info("Verificando se há dados de Usuário Autenticador no banco...");
+        LOG.info("Verificando se há dados de Usuário ADMIN no banco...");
 
         if (userRepository.count() > 0) {
-            LOG.info("Banco de dados já contém dados de Usuário Autenticador. Preenchimento automático ignorado.");
+            LOG.info("Banco de dados já contém dados de Usuário ADMIN. Preenchimento automático ignorado.");
             return;
         }
 
@@ -44,7 +44,7 @@ public class UserSeeder {
 
         } catch (ConstraintViolationException e) {
             // Isso vai te mostrar EXATAMENTE qual campo está inválido
-            LOG.error("Falha na validação ao adiciona o Usuário Autenticador no banco:");
+            LOG.error("Falha na validação ao adiciona o Usuário ADMIN no banco:");
             for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
                 LOG.errorf("Campo: %s | Erro: %s", violation.getPropertyPath(), violation.getMessage());
             }

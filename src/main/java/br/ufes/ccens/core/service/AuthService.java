@@ -20,7 +20,7 @@ public class AuthService {
     private final GenerateToken generateToken;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private static final Logger LOG = Logger.getLogger(StudentService.class);
+    private static final Logger LOG = Logger.getLogger(AuthService.class);
 
     public AuthService(GenerateToken generateToken, UserRepository userRepository, UserMapper userMapper) {
         this.generateToken = generateToken;

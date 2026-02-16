@@ -17,7 +17,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class GenerateToken {
     
-    private static final Logger LOG = Logger.getLogger(StudentNotFoundExceptionMapper.class);
+    private static final Logger LOG = Logger.getLogger(GenerateToken.class);
 
     @ConfigProperty(name = "mp.jwt.verify.issuer")
     String issuer;

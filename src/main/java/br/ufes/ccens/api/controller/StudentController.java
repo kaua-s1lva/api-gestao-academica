@@ -51,6 +51,7 @@ public class StudentController {
                     name, registration, cpf, admStart, admEnd, birthStart, birthEnd);
         var students = studentService.listAll(page, pageSize, name, email, registration, cpf, 
             admStart, admEnd, birthStart, birthEnd);
+        LOG.infof("Filtro e Listagem realizada com sucesso!");
         return Response.ok(students).build();
     }
 
@@ -89,6 +90,7 @@ public class StudentController {
     public Response deleteStudent(@PathParam("id") UUID studentId) {
         LOG.infof("Requisição DELETE recebida para o estudante ID: %s", studentId);
         studentService.deleteStudent(studentId);
+        LOG.infof("Estudante %s removido com sucesso do sistema.", studentId);
         return Response.ok("Student successfully deleted!").build();
     }
 }
