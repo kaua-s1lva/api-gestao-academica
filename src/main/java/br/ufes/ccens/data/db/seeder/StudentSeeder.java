@@ -2,6 +2,9 @@ package br.ufes.ccens.data.db.seeder;
 
 import java.time.LocalDate;
 
+import org.jboss.logging.Logger;
+
+import br.ufes.ccens.core.service.StudentService;
 import br.ufes.ccens.data.entity.StudentEntity;
 import br.ufes.ccens.data.repository.StudentRepository;
 import io.quarkus.runtime.StartupEvent;
@@ -15,15 +18,16 @@ import jakarta.validation.ConstraintViolationException;
 @ApplicationScoped
 public class StudentSeeder {
 
+    private static final Logger LOG = Logger.getLogger(StudentSeeder.class);
     @Inject
     StudentRepository studentRepository;
 
     @Transactional
     public void onStart(@Observes StartupEvent ev) {
-        System.out.println(">>> SEEDER: Iniciando verificação...");
+        LOG.info("Verificando se há dados de Estudantes no banco...");
 
         if (studentRepository.count() > 0) {
-            System.out.println(">>> SEEDER: Banco já tem dados. Pulando.");
+            LOG.info("Banco de dados já contém dados de estudantes. Preenchimento automático ignorado.");
             return;
         }
 
@@ -42,17 +46,16 @@ public class StudentSeeder {
             studentRepository.persist(student);
             studentRepository.flush(); 
 
-            System.out.println(">>> SEEDER: Usuário criado com sucesso!");
+            LOG.info("Estudante criado com sucesso no banco de dados.");
 
         } catch (ConstraintViolationException e) {
             // Isso vai te mostrar EXATAMENTE qual campo está inválido
-            System.out.println(">>> ERRO DE VALIDAÇÃO:");
+            LOG.error("Falha na validação ao adiciona o Estudante no banco:");
             for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
-                System.out.println("CAMPO: " + violation.getPropertyPath() + " - ERRO: " + violation.getMessage());
+                LOG.errorf("Campo: %s | Mensagem de Erro: %s", violation.getPropertyPath(), violation.getMessage());
             }
         } catch (Exception e) {
-            System.out.println(">>> ERRO GENÉRICO: " + e.getMessage());
-            e.printStackTrace();
+            LOG.errorf("Erro genérico: %s", e.getMessage());
         }
     }
     /*

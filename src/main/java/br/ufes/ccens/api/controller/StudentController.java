@@ -2,6 +2,8 @@ package br.ufes.ccens.api.controller;
 
 import java.util.UUID;
 
+import org.jboss.logging.Logger;
+
 import br.ufes.ccens.api.dto.request.SaveStudentRequest;
 import br.ufes.ccens.core.service.StudentService;
 import io.quarkus.security.Authenticated;
@@ -26,7 +28,8 @@ import jakarta.ws.rs.core.Response;
 @Authenticated
 public class StudentController {
     private final StudentService studentService;
-
+    private static final Logger LOG = Logger.getLogger(StudentController.class);
+    
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
@@ -44,6 +47,8 @@ public class StudentController {
             @QueryParam("birthStart") String birthStart,
             @QueryParam("birthEnd") String birthEnd) {
         
+        LOG.infof("Requisiçao GET recebida para listar estudantes com filtros: Nome: %s, Registro: %s, CPF: %s, Adm: %s a %s, Nascimento: %s a %s", 
+                    name, registration, cpf, admStart, admEnd, birthStart, birthEnd);
         var students = studentService.listAll(page, pageSize, name, email, registration, cpf, 
             admStart, admEnd, birthStart, birthEnd);
         return Response.ok(students).build();
@@ -53,6 +58,7 @@ public class StudentController {
     @Transactional
     @RolesAllowed("ADMIN")
     public Response createStudent(SaveStudentRequest studentRequest) {
+        LOG.info("Requisição POST recebida para criar novo estudante.");
         return Response.status(Response.Status.CREATED)
                 .entity(studentService.createStudent(studentRequest))
                 .build();
@@ -61,6 +67,7 @@ public class StudentController {
     @GET
     @Path("/{id}")
     public Response findStudentById(@PathParam("id") UUID studentId) {
+        LOG.infof("Requisição GET recebida para buscar estudante ID: %s", studentId);
         return Response.ok(studentService.findById(studentId)).build();
     }
 
@@ -71,6 +78,7 @@ public class StudentController {
     public Response updateStudent(
             @PathParam("id") UUID studentId,
             SaveStudentRequest studentRequest) {
+        LOG.infof("Requisição PUT recebida para atualizar estudante ID: %s", studentId);
         return Response.ok(studentService.updateStudent(studentId, studentRequest)).build();
     }
 
@@ -79,6 +87,7 @@ public class StudentController {
     @Transactional
     @RolesAllowed("ADMIN")
     public Response deleteStudent(@PathParam("id") UUID studentId) {
+        LOG.infof("Requisição DELETE recebida para o estudante ID: %s", studentId);
         studentService.deleteStudent(studentId);
         return Response.ok("Student successfully deleted!").build();
     }

@@ -1,5 +1,7 @@
 package br.ufes.ccens.data.db.seeder;
 
+import org.jboss.logging.Logger;
+
 import br.ufes.ccens.data.entity.UserEntity;
 import br.ufes.ccens.data.entity.enums.RoleUserEnum;
 import br.ufes.ccens.data.repository.UserRepository;
@@ -14,15 +16,18 @@ import jakarta.validation.ConstraintViolationException;
 
 @ApplicationScoped
 public class UserSeeder {
+    
+    private static final Logger LOG = Logger.getLogger(StudentSeeder.class);
+    
     @Inject
     UserRepository userRepository;
 
     @Transactional
     public void onStart(@Observes StartupEvent ev) {
-        System.out.println(">>> SEEDER: Iniciando verificação...");
+        LOG.info("Verificando se há dados de Usuário Autenticador no banco...");
 
         if (userRepository.count() > 0) {
-            System.out.println(">>> SEEDER: Banco já tem dados. Pulando.");
+            LOG.info("Banco de dados já contém dados de Usuário Autenticador. Preenchimento automático ignorado.");
             return;
         }
 
@@ -35,16 +40,16 @@ public class UserSeeder {
 
             userRepository.persistAndFlush(user);
 
-            System.out.println(">>> SEEDER: Usuário criado com sucesso!");
+            LOG.info("Usuário administrador padrão criado com sucesso.");
 
         } catch (ConstraintViolationException e) {
             // Isso vai te mostrar EXATAMENTE qual campo está inválido
-            System.out.println(">>> ERRO DE VALIDAÇÃO:");
+            LOG.error("Falha na validação ao adiciona o Usuário Autenticador no banco:");
             for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
-                System.out.println("CAMPO: " + violation.getPropertyPath() + " - ERRO: " + violation.getMessage());
+                LOG.errorf("Campo: %s | Erro: %s", violation.getPropertyPath(), violation.getMessage());
             }
         } catch (Exception e) {
-            System.out.println(">>> ERRO GENÉRICO: " + e.getMessage());
+            LOG.errorf("Erro crítico ao inicializar usuários: %s", e.getMessage());
             e.printStackTrace();
         }
     }
