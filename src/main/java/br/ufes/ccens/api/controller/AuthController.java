@@ -1,5 +1,7 @@
 package br.ufes.ccens.api.controller;
 
+import org.jboss.logging.Logger;
+
 import br.ufes.ccens.api.dto.request.LoginUserRequest;
 import br.ufes.ccens.api.dto.request.RegisterUserRequest;
 import br.ufes.ccens.core.service.AuthService;
@@ -20,6 +22,7 @@ import jakarta.ws.rs.core.Response;
 public class AuthController {
 
     private final AuthService authService;
+    private static final Logger LOG = Logger.getLogger(AuthController.class);
 
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -29,7 +32,9 @@ public class AuthController {
     @Path("/login")
     @PermitAll
     public Response login(@Valid LoginUserRequest loginRequest) {
+        LOG.infof("Tentativa de login para o email: %s", loginRequest.email());
         var tokenResponse = authService.login(loginRequest);
+        LOG.info("Login realizado com sucesso!");
         return Response.ok(tokenResponse).build();
     }
 
@@ -37,8 +42,10 @@ public class AuthController {
     @Path("/register")
     @Transactional
     @RolesAllowed("ADMIN")
-    public Response register(@Valid RegisterUserRequest studentEntity) {
-        var student = authService.register(studentEntity);
+    public Response register(@Valid RegisterUserRequest registerRequest) {
+        LOG.infof("Tentativa de registro de novo usuario iniciada pelo ADMIN para o email: %s", registerRequest.email());
+        var student = authService.register(registerRequest);
+        LOG.info("Novo usuario registrado com sucesso no sistema.");
         return Response.status(Response.Status.CREATED).entity(student).build();
     }
 }
