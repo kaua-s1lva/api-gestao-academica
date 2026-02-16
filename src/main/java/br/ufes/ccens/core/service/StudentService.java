@@ -1,42 +1,71 @@
 package br.ufes.ccens.core.service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import java.util.UUID;
 
 import org.jboss.logging.Logger;
 
 import br.ufes.ccens.api.dto.request.SaveStudentRequest;
+import br.ufes.ccens.api.dto.request.UpdateStudentRequest;
+import br.ufes.ccens.api.dto.response.StudentResponse;
 import br.ufes.ccens.api.mapper.StudentMapper;
-import br.ufes.ccens.core.exception.StudentNotFoundException;
+import br.ufes.ccens.common.util.IConverterDataFormat;
+import br.ufes.ccens.core.exception.DuplicateResourceException;
+import br.ufes.ccens.core.exception.ResourceNotFoundException;
+import br.ufes.ccens.core.validation.student.StudentValidator;
 import br.ufes.ccens.data.entity.StudentEntity;
 import br.ufes.ccens.data.repository.StudentRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
+    private final IConverterDataFormat converter;
+    private final StudentValidator studentValidator;
     private static final Logger LOG = Logger.getLogger(StudentService.class);
 
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper) {
+    public StudentService(
+            StudentRepository studentRepository, 
+            StudentMapper studentMapper, 
+            IConverterDataFormat converter,
+            StudentValidator studentValidator) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
+        this.converter = converter;
+        this.studentValidator = studentValidator;
     }
 
-    public StudentEntity createStudent(SaveStudentRequest studentRequest) {
-        try {
-            var studentEntity = studentMapper.toEntity(studentRequest);
-            studentRepository.persistAndFlush(studentEntity);
-            LOG.info("Estudante criado com sucesso: " + studentEntity.getStudentId());
-            return studentEntity;
-        } catch (Exception e) {
-            LOG.error("Erro ao criar estudante: " + e.getMessage());
-            throw new RuntimeException("Erro ao criar usuário: " + e.getMessage());
+    @Transactional
+    public StudentResponse createStudent(SaveStudentRequest studentRequest) {
+        var studentEntity = studentMapper.toEntity(studentRequest);
+/*
+        var existingEmail = studentRepository.find("email", studentEntity.getEmail()).firstResult();
+        if (existingEmail != null) {
+            LOG.error("Email já cadastrado");
+            throw new DuplicateResourceException("Email já cadastrado");
         }
-    }
 
+        var existingCpf = studentRepository.find("cpf", studentEntity.getCpf()).firstResult();
+
+        if (existingCpf != null) {
+            LOG.error("Cpf já cadastrado");
+            throw new DuplicateResourceException("Cpf já cadastrado");
+        }
+ */
+        studentValidator.validate(studentEntity);
+        studentRepository.persistAndFlush(studentEntity);
+        LOG.info("Estudante criado com sucesso: " + studentEntity.getStudentId());
+        return studentMapper.toResponse(studentEntity);
+    }
+/* 
     private LocalDate parseDate(String dateStr) {
+        
+        
         if (dateStr == null || dateStr.isBlank()) {
             return null;
         }
@@ -55,52 +84,63 @@ public class StudentService {
                 throw new RuntimeException("Formato de data inválido [" + dateStr + "]. Use AAAA-MM-DD ou DD/MM/AAAA");
             }
         }
+            
+        if (dateStr == null || dateStr.isBlank()) return null;
+        return LocalDate.parse(dateStr, MULTI_FORMATTER);
     }
-
-    public List<StudentEntity> listAll(Integer page, Integer pageSize, String name, String email, String registration, String cpf,
+*/
+    public List<StudentResponse> listAll(Integer page, Integer pageSize, String name, String email, String registration, String cpf,
                                   String admStart, String admEnd, String birthStart, String birthEnd) {
-        LocalDate admissionStart = parseDate(admStart);
-        LocalDate admissionEnd = parseDate(admEnd);
-        LocalDate birthStartDate = parseDate(birthStart);
-        LocalDate birthEndDate = parseDate(birthEnd);
+        LocalDate admissionStart = converter.parse(admStart);
+        LocalDate admissionEnd = converter.parse(admEnd);
+        LocalDate birthStartDate = converter.parse(birthStart);
+        LocalDate birthEndDate = converter.parse(birthEnd);
+
+        List<StudentEntity> students;
 
         if (name != null || email != null || registration != null || cpf != null || admissionStart != null || birthStartDate != null) {
-        
             LOG.info("Realizando busca com filtros inseridos");
-            return studentRepository.findWithFilters(name, email, registration, cpf, admissionStart, 
+            students = studentRepository.findWithFilters(name, email, registration, cpf, admissionStart, 
                         admissionEnd, birthStartDate, birthEndDate, page, pageSize);
+        } else {
+            LOG.info("Listando todos os estudantes (sem filtros)");
+            students = studentRepository.findAll().page(page, pageSize).list();
         }
 
-        LOG.info("Listando todos os estudantes (sem filtros)");
-        return studentRepository.findAll().page(page, pageSize).list();
+        return students.stream()
+                .map(studentMapper::toResponse)
+                .toList();
     }
 
-    public StudentEntity findById(UUID studentId) {
+    public StudentResponse findById(UUID studentId) {
         LOG.info("Buscando estudante pelo ID: " + studentId);
-        return studentRepository.findByIdOptional(studentId)
-            .orElseThrow(StudentNotFoundException::new);
+        var student = getStudentEntity(studentId);
+        return studentMapper.toResponse(student);
     }
 
-    public StudentEntity updateStudent(UUID studentId, SaveStudentRequest studentRequest) {
+    @Transactional
+    public StudentResponse updateStudent(UUID studentId, UpdateStudentRequest studentRequest) {
         LOG.info("Atualizando dados do estudante ID: " + studentId);
-        var student = findById(studentId);
-        
-        var studentEntity = studentMapper.toEntity(studentRequest);
+        var studentEntity = getStudentEntity(studentId);
+        var newStudent = studentMapper.toEntity(studentRequest);
+        newStudent.setStudentId(studentId);
 
-        student.setName(studentEntity.getName());
-        student.setRegistration(studentEntity.getRegistration());
-        student.setAdmissionDate(studentEntity.getAdmissionDate());
-        student.setBirthDate(studentEntity.getBirthDate());
-        student.setCpf(studentEntity.getCpf());
+        studentValidator.validate(newStudent);
+        studentMapper.updateEntityFromDto(studentRequest, studentEntity);
+        studentRepository.persist(studentEntity);
 
-        studentRepository.persist(student);
-
-        return student;
+        return studentMapper.toResponse(studentEntity);
     }
 
+    @Transactional
     public void deleteStudent(UUID studentId) {
         LOG.info("Solicitação de exclusão para o estudante ID: " + studentId);
-        var student = findById(studentId);
+        var student = getStudentEntity(studentId);
         studentRepository.deleteById(student.getStudentId());
+    }
+
+    private StudentEntity getStudentEntity(UUID studentId) {
+        return studentRepository.findByIdOptional(studentId)
+            .orElseThrow(() -> new ResourceNotFoundException("Estudante não encontrado com o ID fornecido."));
     }
 }

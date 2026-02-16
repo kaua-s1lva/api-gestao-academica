@@ -1,4 +1,4 @@
-package br.ufes.ccens.core.exception;
+package br.ufes.ccens.api.exception;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;

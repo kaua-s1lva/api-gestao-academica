@@ -43,3 +43,6 @@ nb-configuration.xml
 /.quarkus/cli/plugins/
 # TLS Certificates
 .certs/
+
+# Chave Privada JWT (NUNCA commitar isso!)
+privateKey.pem

@@ -65,7 +65,6 @@ public class StudentEntity extends BaseAuditEntity {
 
     public void setEmail(String email) {
         this.email = email;
-        
     }
 
     public void setRegistration(String registration) {
