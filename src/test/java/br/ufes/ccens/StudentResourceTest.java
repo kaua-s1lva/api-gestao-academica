@@ -1,15 +1,18 @@
 package br.ufes.ccens;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.http.ContentType;
+import static io.restassured.RestAssured.given;
+
 import org.junit.jupiter.api.Test;
 
-import static io.restassured.RestAssured.given;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
+import io.restassured.http.ContentType;
 
 @QuarkusTest
 public class StudentResourceTest {
 
     @Test
+    @TestSecurity(user = "admin", roles = "ADMIN")
     public void testListarAlunos() {
         given()
             .when().get("/students")
@@ -18,13 +21,14 @@ public class StudentResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "admin", roles = "ADMIN")
     public void testCriarAlunoValido() { // Caso obrigatório 
-        String json = "{\"nome\": \"Mik\", \"matricula\": \"2025001\", \"email\": \"mik@ufes.br\"}";
+        String json = "{\"name\": \"Mik\", \"email\": \"mik@edu.ufes.br\", \"admissionDate\": \"2022-10-01\", \"registration\": \"2020001\", \"birthDate\": \"2000-01-01\", \"cpf\": \"61328198006\"}";
         
         given()
           .contentType(ContentType.JSON)
           .body(json)
-          .when().post("/alunos")
+          .when().post("/students")
           .then()
              .statusCode(201); // Valida o status 201 Created [cite: 111]
     }
