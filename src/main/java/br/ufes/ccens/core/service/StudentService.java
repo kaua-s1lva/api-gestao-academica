@@ -12,8 +12,10 @@ import br.ufes.ccens.api.dto.request.SaveStudentRequest;
 import br.ufes.ccens.api.dto.request.UpdateStudentRequest;
 import br.ufes.ccens.api.dto.response.StudentResponse;
 import br.ufes.ccens.api.mapper.StudentMapper;
+import br.ufes.ccens.common.util.IConverterDataFormat;
 import br.ufes.ccens.core.exception.DuplicateResourceException;
 import br.ufes.ccens.core.exception.ResourceNotFoundException;
+import br.ufes.ccens.core.validation.student.StudentValidator;
 import br.ufes.ccens.data.entity.StudentEntity;
 import br.ufes.ccens.data.repository.StudentRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -23,22 +25,26 @@ import jakarta.transaction.Transactional;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
-    private static final DateTimeFormatter MULTI_FORMATTER = new DateTimeFormatterBuilder()
-            .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE)
-            .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-            .toFormatter();
+    private final IConverterDataFormat converter;
+    private final StudentValidator studentValidator;
     private static final Logger LOG = Logger.getLogger(StudentService.class);
 
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper) {
+    public StudentService(
+            StudentRepository studentRepository, 
+            StudentMapper studentMapper, 
+            IConverterDataFormat converter,
+            StudentValidator studentValidator) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
+        this.converter = converter;
+        this.studentValidator = studentValidator;
     }
 
     @Transactional
     public StudentResponse createStudent(SaveStudentRequest studentRequest) {
         var studentEntity = studentMapper.toEntity(studentRequest);
+/*
         var existingEmail = studentRepository.find("email", studentEntity.getEmail()).firstResult();
-
         if (existingEmail != null) {
             LOG.error("Email já cadastrado");
             throw new DuplicateResourceException("Email já cadastrado");
@@ -50,14 +56,15 @@ public class StudentService {
             LOG.error("Cpf já cadastrado");
             throw new DuplicateResourceException("Cpf já cadastrado");
         }
-
+ */
+        studentValidator.validate(studentEntity);
         studentRepository.persistAndFlush(studentEntity);
         LOG.info("Estudante criado com sucesso: " + studentEntity.getStudentId());
         return studentMapper.toResponse(studentEntity);
     }
-
+/* 
     private LocalDate parseDate(String dateStr) {
-        /*
+        
         
         if (dateStr == null || dateStr.isBlank()) {
             return null;
@@ -77,17 +84,17 @@ public class StudentService {
                 throw new RuntimeException("Formato de data inválido [" + dateStr + "]. Use AAAA-MM-DD ou DD/MM/AAAA");
             }
         }
-            */
+            
         if (dateStr == null || dateStr.isBlank()) return null;
         return LocalDate.parse(dateStr, MULTI_FORMATTER);
     }
-
+*/
     public List<StudentResponse> listAll(Integer page, Integer pageSize, String name, String email, String registration, String cpf,
                                   String admStart, String admEnd, String birthStart, String birthEnd) {
-        LocalDate admissionStart = parseDate(admStart);
-        LocalDate admissionEnd = parseDate(admEnd);
-        LocalDate birthStartDate = parseDate(birthStart);
-        LocalDate birthEndDate = parseDate(birthEnd);
+        LocalDate admissionStart = converter.parse(admStart);
+        LocalDate admissionEnd = converter.parse(admEnd);
+        LocalDate birthStartDate = converter.parse(birthStart);
+        LocalDate birthEndDate = converter.parse(birthEnd);
 
         List<StudentEntity> students;
 
@@ -115,38 +122,11 @@ public class StudentService {
     public StudentResponse updateStudent(UUID studentId, UpdateStudentRequest studentRequest) {
         LOG.info("Atualizando dados do estudante ID: " + studentId);
         var studentEntity = getStudentEntity(studentId);
-        
         var newStudent = studentMapper.toEntity(studentRequest);
+        newStudent.setStudentId(studentId);
 
-        if (newStudent.getName() != null && !newStudent.getName().isBlank()) {
-            studentEntity.setName(newStudent.getName());
-        }
-        if (newStudent.getRegistration() != null && !newStudent.getRegistration().isBlank()) {
-            studentEntity.setRegistration(newStudent.getRegistration());
-        }
-        if (newStudent.getCpf() != null && !newStudent.getCpf().isBlank()) {
-            var existingCpf = studentRepository.find("cpf", newStudent.getCpf()).firstResult();
-            if (existingCpf != null && !existingCpf.getStudentId().equals(studentId)) {
-                LOG.error("Tentativa de uso de CPF já cadastrado por outro estudante");
-                throw new DuplicateResourceException("CPF já cadastrado.");
-            }
-            studentEntity.setCpf(newStudent.getCpf());
-        }
-        if (newStudent.getEmail() != null && !newStudent.getEmail().isBlank()) {
-            var existingEmail = studentRepository.find("email", newStudent.getEmail()).firstResult();
-            if (existingEmail != null && !existingEmail.getStudentId().equals(studentId)) {
-                LOG.error("Tentativa de uso de e-mail já cadastrado por outro estudante");
-                throw new DuplicateResourceException("E-mail já cadastrado.");
-            }
-            studentEntity.setEmail(newStudent.getEmail());
-        }
-        if (newStudent.getAdmissionDate() != null) {
-            studentEntity.setAdmissionDate(newStudent.getAdmissionDate());
-        }
-        if (newStudent.getBirthDate() != null) {
-            studentEntity.setBirthDate(newStudent.getBirthDate());
-        }
-
+        studentValidator.validate(newStudent);
+        studentMapper.updateEntityFromDto(studentRequest, studentEntity);
         studentRepository.persist(studentEntity);
 
         return studentMapper.toResponse(studentEntity);
