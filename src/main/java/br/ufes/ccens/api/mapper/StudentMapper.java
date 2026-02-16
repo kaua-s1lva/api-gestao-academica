@@ -15,6 +15,7 @@ import org.mapstruct.ReportingPolicy;
 public interface StudentMapper {
     StudentEntity toEntity(SaveStudentRequest request);
     StudentEntity toEntity(UpdateStudentRequest request);
+    StudentEntity toEntity(StudentResponse response);
     StudentResponse toResponse(StudentEntity entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
