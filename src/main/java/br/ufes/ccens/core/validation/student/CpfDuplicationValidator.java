@@ -21,7 +21,7 @@ public class CpfDuplicationValidator implements StudentValidationStrategy {
         var existing = studentRepository.find("cpf", student.getCpf()).firstResult();
 
         if (existing != null && !existing.getStudentId().equals(student.getStudentId())) {
-            throw new DuplicateResourceException("O CPF informado já está em uso por outro estudante.");
+            throw new DuplicateResourceException("cpf", "O CPF informado já está em uso por outro estudante.");
         }
     }
     
