@@ -13,6 +13,7 @@ import br.ufes.ccens.api.dto.response.StudentResponse;
 import br.ufes.ccens.api.mapper.StudentMapper;
 import br.ufes.ccens.common.util.IConverterDataFormat;
 import br.ufes.ccens.core.exception.ResourceNotFoundException;
+import br.ufes.ccens.core.validation.student.StudentFilterValidator;
 import br.ufes.ccens.core.validation.student.StudentValidator;
 import br.ufes.ccens.data.entity.StudentEntity;
 import br.ufes.ccens.data.repository.StudentRepository;
@@ -27,17 +28,20 @@ public class StudentService {
     private final StudentMapper studentMapper;
     private final IConverterDataFormat converter;
     private final StudentValidator studentValidator;
+    private final StudentFilterValidator studentFilterValidator;
     private static final Logger LOG = Logger.getLogger(StudentService.class);
 
     public StudentService(
-            StudentRepository studentRepository, 
-            StudentMapper studentMapper, 
+            StudentRepository studentRepository,
+            StudentMapper studentMapper,
             IConverterDataFormat converter,
-            StudentValidator studentValidator) {
+            StudentValidator studentValidator,
+            StudentFilterValidator studentFilterValidator) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.converter = converter;
         this.studentValidator = studentValidator;
+        this.studentFilterValidator = studentFilterValidator;
     }
 
     @Transactional
@@ -49,24 +53,31 @@ public class StudentService {
         return studentMapper.toResponse(studentEntity);
     }
 
-    public PageResponse<StudentResponse> listAll(Integer page, Integer pageSize, String sortBy, String sortDir, String name, String email, 
-                                                    String registration, String cpf, String admStart, 
-                                                    String admEnd, String birthStart, String birthEnd) {
-                                                    
+    public PageResponse<StudentResponse> listAll(Integer page, Integer pageSize, String sortBy, String sortDir,
+            String name, String email,
+            String registration, String cpf, String admStart,
+            String admEnd, String birthStart, String birthEnd) {
+
+        studentFilterValidator.validate(page, pageSize, sortBy, sortDir, registration, cpf, email, admStart, admEnd,
+                birthStart,
+                birthEnd);
+
         LocalDate admissionStart = converter.parse(admStart);
         LocalDate admissionEnd = converter.parse(admEnd);
         LocalDate birthStartDate = converter.parse(birthStart);
         LocalDate birthEndDate = converter.parse(birthEnd);
 
-        Sort.Direction direction = sortDir.equalsIgnoreCase("desc") ? Sort.Direction.Descending : Sort.Direction.Ascending;
+        Sort.Direction direction = sortDir.equalsIgnoreCase("desc") ? Sort.Direction.Descending
+                : Sort.Direction.Ascending;
         Sort sort = Sort.by(sortBy, direction);
 
         PanacheQuery<StudentEntity> query;
 
-        if (name != null || email != null || registration != null || cpf != null || admissionStart != null || birthStartDate != null) {
+        if (name != null || email != null || registration != null || cpf != null || admissionStart != null
+                || birthStartDate != null) {
             LOG.info("Realizando busca com filtros inseridos");
-            query = studentRepository.findWithFilters(name, email, registration, cpf, admissionStart, 
-                        admissionEnd, birthStartDate, birthEndDate, sort);
+            query = studentRepository.findWithFilters(name, email, registration, cpf, admissionStart,
+                    admissionEnd, birthStartDate, birthEndDate, sort);
         } else {
             LOG.info("Listando todos os estudantes (sem filtros)");
             query = studentRepository.findAll(sort);
@@ -78,13 +89,16 @@ public class StudentService {
                 .map(studentMapper::toResponse)
                 .toList();
 
+        if (content.isEmpty()) {
+            throw new ResourceNotFoundException("Students not found.");
+        }
+
         return new PageResponse<>(
                 content,
                 page,
                 pageSize,
                 query.count(),
-                query.pageCount()
-        );
+                query.pageCount());
     }
 
     public StudentResponse findById(UUID studentId) {
@@ -116,6 +130,6 @@ public class StudentService {
 
     private StudentEntity getStudentEntity(UUID studentId) {
         return studentRepository.findByIdOptional(studentId)
-            .orElseThrow(() -> new ResourceNotFoundException("Estudante não encontrado com o ID fornecido."));
+                .orElseThrow(() -> new ResourceNotFoundException("Estudante não encontrado com o ID fornecido."));
     }
 }
