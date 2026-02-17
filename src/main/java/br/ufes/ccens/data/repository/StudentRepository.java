@@ -2,17 +2,19 @@ package br.ufes.ccens.data.repository;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import br.ufes.ccens.data.entity.StudentEntity;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class StudentRepository implements PanacheRepositoryBase<StudentEntity, UUID> {
-    public List<StudentEntity> findWithFilters(String name, String email, String registration, String cpf, LocalDate admStart, LocalDate admEnd, LocalDate birthStart, LocalDate birthEnd, int page, int pageSize) {
+    public PanacheQuery<StudentEntity> findWithFilters(String name, String email, String registration, String cpf, 
+                                                       LocalDate admStart, LocalDate admEnd, 
+                                                       LocalDate birthStart, LocalDate birthEnd) {
         StringBuilder query = new StringBuilder("1=1");
         Map<String, Object> params = new HashMap<>();
 
@@ -43,6 +45,6 @@ public class StudentRepository implements PanacheRepositoryBase<StudentEntity, U
             params.put("bEnd", birthEnd);
         }
 
-        return find(query.toString(), params).page(page, pageSize).list();
+        return find(query.toString(), params);
     }
 }

@@ -40,8 +40,8 @@ public class StudentController {
             @QueryParam("email") String email,
             @QueryParam("registration") String registration,
             @QueryParam("cpf") String cpf,
-            @QueryParam("admStart") String admStart,
-            @QueryParam("admEnd") String admEnd,
+            @QueryParam("admissionStart") String admStart,
+            @QueryParam("admissionEnd") String admEnd,
             @QueryParam("birthStart") String birthStart,
             @QueryParam("birthEnd") String birthEnd) {
         
