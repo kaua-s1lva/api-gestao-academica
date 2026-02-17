@@ -1,80 +1,169 @@
 # sistema-registros-academicos
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Este projeto utiliza **Quarkus** — o Supersonic Subatomic Java Framework.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+Para saber mais sobre Quarkus, visite: [https://quarkus.io/](https://quarkus.io/).
 
-## Running the application in dev mode
+---
 
-You can run your application in dev mode that enables live coding using:
+## Índice
 
-```shell script
+* [Sobre](#sobre)
+* [Pré-requisitos](#pr%C3%A9-requisitos)
+* [🚀 Passo a Passo para Execução (Setup Local)](#-passo-a-passo-para-execu%C3%A7%C3%A3o-setup-local)
+
+  * [1. Banco de Dados (MySQL)](#1-banco-de-dados-mysql)
+  * [2. Variáveis de Ambiente (.env)](#2-vari%C3%A1veis-de-ambiente-env)
+  * [3. Geração das Chaves JWT (RSA)](#3-gera%C3%A7%C3%A3o-das-chaves-jwt-rsa)
+  * [4. Executando a aplicação em modo `dev`](#4-executando-a-aplica%C3%A7%C3%A3o-em-modo-dev)
+* [Packaging e execução](#packaging-e-execu%C3%A7%C3%A3o)
+
+  * [Über-jar (opcional)](#%C3%BCber-jar-opcional)
+  * [Executável nativo (native)](#execut%C3%A1vel-nativo-native)
+* [Guides relacionados (Quarkus)](#guides-relacionados-quarkus)
+* [Código fornecido / pontos de partida](#c%C3%B3digo-fornecido--pontos-de-partida)
+
+## Sobre
+
+Projeto base de um sistema de registros acadêmicos construído com Quarkus. Inclui autenticação JWT (com RSA), persistência via Hibernate ORM e configuração externa via arquivo `.env` seguindo a metodologia Twelve-Factor App.
+
+## Pré-requisitos
+
+* Java JDK (versão 21)
+* Maven (ou usar o `mvnw` incluído)
+* MySQL instalado e em execução
+* OpenSSL (para gerar chaves RSA)
+
+## 🚀 Passo a Passo para Execução (Setup Local)
+
+### 1. Banco de Dados (MySQL)
+
+Certifique-se de ter o MySQL instalado e rodando.
+
+Crie um schema em branco chamado `ccens_db`. O Hibernate cuidará da criação das tabelas:
+
+```sql
+CREATE DATABASE ccens_db;
+```
+
+### 2. Variáveis de Ambiente (.env)
+
+A aplicação utiliza a metodologia do Twelve-Factor App para ocultar credenciais.
+
+Crie um arquivo chamado `.env` na raiz do projeto (na mesma pasta do `pom.xml`) e adicione as seguintes variáveis:
+
+```env
+# Configurações do Banco de Dados
+DB_URL=jdbc:mysql://localhost:3306/ccens_db
+DB_USER=seu_usuario_mysql
+DB_PASS=sua_senha_mysql
+
+# Caminho absoluto ou relativo da sua Chave Privada JWT (PKCS8)
+JWT_PRIVATE_KEY_PATH=privateKey.pem
+```
+
+> Obs.: Substitua `seu_usuario_mysql` e `sua_senha_mysql` pelos valores corretos do seu ambiente.
+
+### 3. Geração das Chaves JWT (RSA)
+
+Gere o par de chaves JWT executando os comandos do OpenSSL no seu terminal. Atenção (usuários de Windows): Utilize um emulador de terminal com ambiente Linux, como o Git Bash ou o WSL, para que os comandos do OpenSSL funcionem corretamente.
+
+Gere a chave privada e converta para PKCS8 (salve na raiz do projeto como `privateKey.pem`):
+
+```bash
+openssl genrsa -out rsaPrivateKey.pem 2048
+openssl pkcs8 -topk8 -nocrypt -inform pem -in rsaPrivateKey.pem -outform pem -out privateKey.pem
+```
+
+Gere a chave pública (salve em `src/main/resources` como `publicKey.pem`):
+
+```bash
+openssl rsa -in rsaPrivateKey.pem -pubout -out publicKey.pem
+```
+
+Exclua o arquivo necessário para gerar a chave pública:
+
+```bash
+rm rsaPrivateKey.pem
+```
+
+### 4. Executando a aplicação em modo `dev`
+
+Você pode rodar a aplicação em modo de desenvolvimento (habilita live coding) com:
+
+```bash
 ./mvnw quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+> NOTE: O Quarkus fornece uma Dev UI disponível apenas em modo dev: `http://localhost:8080/q/dev/`. Também é possível acessar a documentação da API: `http://localhost:8080/q/swagger-ui/`.
 
-## Packaging and running the application
+Ao iniciar a aplicação com sucesso em modo `dev`, o schema será criado. Para acessar a aplicação, será necessário a inserção manual no banco de dados, através do arquivo `insertUser.sql`.
 
-The application can be packaged using:
+## Packaging e execução
 
-```shell script
+Para empacotar a aplicação:
+
+```bash
 ./mvnw package
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+Isso gera o arquivo `quarkus-run.jar` em `target/quarkus-app/`. Observe que não é um über-jar: as dependências ficam em `target/quarkus-app/lib/`.
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+Execute a aplicação com:
 
-If you want to build an _über-jar_, execute the following command:
+```bash
+java -jar target/quarkus-app/quarkus-run.jar
+```
 
-```shell script
+### Über-jar (opcional)
+
+Se preferir um único JAR (über-jar):
+
+```bash
 ./mvnw package -Dquarkus.package.jar.type=uber-jar
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+Depois, execute com:
 
-## Creating a native executable
+```bash
+java -jar target/*-runner.jar
+```
 
-You can create a native executable using:
+### Executável nativo (native)
 
-```shell script
+Crie um executável nativo com:
+
+```bash
 ./mvnw package -Dnative
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+Se você não possui GraalVM localmente, pode usar o build nativo em container:
 
-```shell script
+```bash
 ./mvnw package -Dnative -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./target/sistema-registros-academicos-1.0.0-SNAPSHOT-runner`
+Após a geração, execute o binário nativo (exemplo):
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+```bash
+./target/sistema-registros-academicos-1.0.0-SNAPSHOT-runner
+```
 
-## Related Guides
+Para mais detalhes sobre builds nativos, consulte a documentação do Quarkus: [https://quarkus.io/guides/maven-tooling](https://quarkus.io/guides/maven-tooling)
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- SmallRye OpenAPI ([guide](https://quarkus.io/guides/openapi-swaggerui)): Document your REST APIs with OpenAPI - comes with Swagger UI
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- SmallRye JWT ([guide](https://quarkus.io/guides/security-jwt)): Secure your applications with JSON Web Token
-- JDBC Driver - MySQL ([guide](https://quarkus.io/guides/datasource)): Connect to the MySQL database via JDBC
+## Guides relacionados (Quarkus)
 
-## Provided Code
+* REST (Jakarta REST + Vert.x)
+* SmallRye OpenAPI (documentação das APIs com Swagger UI)
+* REST Jackson (serialização Jackson para Quarkus REST)
+* Hibernate ORM with Panache (simplifica persistência com JPA)
+* SmallRye JWT (segurança com JSON Web Token)
+* JDBC Driver - MySQL (conexão MySQL via JDBC)
 
-### Hibernate ORM
+## Código fornecido / pontos de partida
 
-Create your first JPA entity
+* **Hibernate ORM** — exemplos de criação de entidades JPA e uso com Panache.
+* **REST** — endpoints iniciais para criar/ler/atualizar/excluir recursos.
 
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
+(Ver seções e pacotes do projeto para exemplos e guias específicos.)
 
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
-
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)

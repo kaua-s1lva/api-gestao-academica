@@ -45,4 +45,4 @@ nb-configuration.xml
 .certs/
 
 # Chave Privada JWT (NUNCA commitar isso!)
-privateKey.pem
+*.pem
