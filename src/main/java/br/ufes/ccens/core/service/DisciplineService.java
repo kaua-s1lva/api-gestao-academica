@@ -10,11 +10,13 @@ import br.ufes.ccens.api.dto.request.UpdateDisciplineRequest;
 import br.ufes.ccens.api.dto.response.DisciplineResponse;
 import br.ufes.ccens.api.mapper.DisciplineMapper;
 import br.ufes.ccens.core.exception.ResourceNotFoundException;
+import br.ufes.ccens.core.interceptor.LogTransaction;
 import br.ufes.ccens.data.repository.DisciplineRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
+@LogTransaction
 public class DisciplineService {
 
     private final DisciplineRepository disciplineRepository;
