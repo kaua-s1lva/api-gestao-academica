@@ -2,14 +2,13 @@ package br.ufes.ccens.api.dto.request;
 
 import java.time.LocalDate;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.hibernate.validator.constraints.br.CPF;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 public record SaveStudentRequest(
         @NotBlank(message = "O nome é obrigatório") 
@@ -35,8 +34,5 @@ public record SaveStudentRequest(
         @Schema(title = "Birth Date", example = "2000-05-15") 
         LocalDate birthDate,
 
-        @NotBlank(message = "O CPF é obrigatório") 
-        @CPF(message = "CPF inválido") 
-        @Schema(title = "CPF", example = "123.456.789-00") 
-        String cpf
-) {}
+        @NotBlank(message = "O CPF é obrigatório") @CPF(message = "CPF inválido") @Schema(title = "CPF", example = "053.806.890-60") String cpf) {
+}
