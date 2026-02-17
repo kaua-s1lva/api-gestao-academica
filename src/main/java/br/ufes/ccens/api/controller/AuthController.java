@@ -54,8 +54,8 @@ public class AuthController {
     @APIResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Validation Error", value = AuthExample.BAD_REQUEST_RESPONSE)))
     @APIResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Internal Server Error", value = AuthExample.INTERNAL_SERVER_ERROR_RESPONSE)))
     public Response register(
-            @Valid @RequestBody(description = "User registration data", required = true, content = @Content(schema = @Schema(implementation = RegisterUserRequest.class), examples = @ExampleObject(name = "Register Request", value = AuthExample.REGISTER_REQUEST))) RegisterUserRequest studentRequest) {
-        var student = authService.register(studentRequest);
-        return Response.status(Response.Status.CREATED).entity(student).build();
+            @Valid @RequestBody(description = "User registration data", required = true, content = @Content(schema = @Schema(implementation = RegisterUserRequest.class), examples = @ExampleObject(name = "Register Request", value = AuthExample.REGISTER_REQUEST))) RegisterUserRequest registerRequest) {
+        var response = authService.register(registerRequest);
+        return Response.status(Response.Status.CREATED).entity(response).build();
     }
 }

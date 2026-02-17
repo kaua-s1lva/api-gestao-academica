@@ -3,8 +3,6 @@ package br.ufes.ccens.core.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.jboss.logging.Logger;
-
 import br.ufes.ccens.api.dto.request.SaveAcademicRecordRequest;
 import br.ufes.ccens.api.dto.request.UpdateAcademicRecordRequest;
 import br.ufes.ccens.api.dto.response.AcademicRecordResponse;
@@ -33,7 +31,6 @@ public class AcademicRecordService {
     private final AcademicRecordMapper academicRecordMapper;
     private final AcademicRecordFilterValidator academicRecordFilterValidator;
     private final AcademicRecordValidator academicRecordValidator;
-    private static final Logger LOG = Logger.getLogger(AcademicRecordService.class);
 
     public AcademicRecordService(
             AcademicRecordRepository academicRecordRepository,
@@ -52,7 +49,6 @@ public class AcademicRecordService {
 
     @Transactional
     public AcademicRecordResponse createAcademicRecord(SaveAcademicRecordRequest request) {
-        LOG.info("Criando novo registro acadêmico");
         var entity = academicRecordMapper.toEntity(request);
 
         var student = studentRepository.findByIdOptional(request.studentId())
@@ -72,8 +68,6 @@ public class AcademicRecordService {
 
     public PageResponse<AcademicRecordResponse> listAll(Integer page, Integer pageSize, String sortBy, String sortDir,
             String semester, String status, UUID studentId, UUID disciplineId) {
-        LOG.info("Listando todos os registros acadêmicos com filtros");
-
         academicRecordFilterValidator.validate(page, pageSize, sortBy, sortDir, semester, status, studentId,
                 disciplineId);
 
@@ -116,7 +110,6 @@ public class AcademicRecordService {
     }
 
     public AcademicRecordResponse findById(UUID id) {
-        LOG.info("Buscando registro acadêmico com ID: " + id);
         return academicRecordRepository.findByIdOptional(id)
                 .map(academicRecordMapper::toResponse)
                 .orElseThrow(
@@ -125,7 +118,6 @@ public class AcademicRecordService {
 
     @Transactional
     public AcademicRecordResponse updateAcademicRecord(UUID id, UpdateAcademicRecordRequest request) {
-        LOG.info("Atualizando registro acadêmico ID: " + id);
         var entity = academicRecordRepository.findByIdOptional(id)
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Registro acadêmico não encontrado com o ID fornecido."));
@@ -152,15 +144,12 @@ public class AcademicRecordService {
 
     @Transactional
     public void deleteAcademicRecord(UUID id) {
-        LOG.info("Removendo registro acadêmico ID: " + id);
         if (!academicRecordRepository.deleteById(id)) {
             throw new ResourceNotFoundException("Registro acadêmico não encontrado com o ID fornecido.");
         }
     }
 
     public List<AcademicRecordResponse> listByStudent(UUID studentId, UUID disciplineId) {
-        LOG.info("Listando registros acadêmicos do aluno ID: " + studentId);
-
         if (studentRepository.findByIdOptional(studentId).isEmpty()) {
             throw new ResourceNotFoundException("Estudante não encontrado com o ID fornecido.");
         }
@@ -181,8 +170,6 @@ public class AcademicRecordService {
     }
 
     public List<AcademicRecordResponse> listByDiscipline(UUID disciplineId) {
-        LOG.info("Listando registros acadêmicos da disciplina ID: " + disciplineId);
-
         if (disciplineRepository.findByIdOptional(disciplineId).isEmpty()) {
             throw new ResourceNotFoundException("Disciplina não encontrada com o ID fornecido.");
         }
