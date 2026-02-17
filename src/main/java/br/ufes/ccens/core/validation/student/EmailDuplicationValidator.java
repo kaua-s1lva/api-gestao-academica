@@ -16,12 +16,13 @@ public class EmailDuplicationValidator implements StudentValidationStrategy {
 
     @Override
     public void validate(StudentEntity student) {
-        if (student.getEmail() == null || student.getEmail().isBlank()) return;
+        if (student.getEmail() == null || student.getEmail().isBlank())
+            return;
 
         var existing = studentRepository.find("email", student.getEmail()).firstResult();
 
         if (existing != null && !existing.getStudentId().equals(student.getStudentId())) {
-            throw new DuplicateResourceException("O E-mail informado já está em uso por outro estudante.");
+            throw new DuplicateResourceException("email", "O E-mail informado já está em uso por outro estudante.");
         }
     }
 }
