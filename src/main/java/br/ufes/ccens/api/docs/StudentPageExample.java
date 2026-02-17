@@ -10,8 +10,8 @@ public class StudentPageExample {
             "name": "Nome do Estudante",
             "email": "email@exemplo.com",
             "registration": "2021200000",
-            "admissionDate": "2021-01-01",
-            "birthDate": "2000-01-01"
+            "admissionDate": "01-01-2021",
+            "birthDate": "01-01-2000"
           }
         ],
         "page": 0,

@@ -23,6 +23,14 @@ public class StudentExample {
       }
       """;
 
+    public static final String INTERNAL_SERVER_ERROR_RESPONSE = """
+      {
+        "status": 500,
+        "message": "Internal Server Error",
+        "errors": []
+      }
+      """;
+
   private StudentExample() {
     // Private constructor to hide the implicit public one
   }
