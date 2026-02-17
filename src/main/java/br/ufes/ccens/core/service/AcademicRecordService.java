@@ -179,4 +179,22 @@ public class AcademicRecordService {
                 .map(academicRecordMapper::toResponse)
                 .toList();
     }
+
+    public List<AcademicRecordResponse> listByDiscipline(UUID disciplineId) {
+        LOG.info("Listando registros acadêmicos da disciplina ID: " + disciplineId);
+
+        if (disciplineRepository.findByIdOptional(disciplineId).isEmpty()) {
+            throw new ResourceNotFoundException("Disciplina não encontrada com o ID fornecido.");
+        }
+
+        var records = academicRecordRepository.findByDiscipline(disciplineId);
+
+        if (records.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhum registro acadêmico encontrado para esta disciplina.");
+        }
+
+        return records.stream()
+                .map(academicRecordMapper::toResponse)
+                .toList();
+    }
 }

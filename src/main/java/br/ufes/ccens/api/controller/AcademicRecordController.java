@@ -114,4 +114,14 @@ public class AcademicRecordController {
             @QueryParam("disciplineId") UUID disciplineId) {
         return Response.ok(academicRecordService.listByStudent(studentId, disciplineId)).build();
     }
+
+    @GET
+    @Path("/discipline/{disciplineId}")
+    @APIResponse(responseCode = "200", description = "Academic Records found", content = @Content(mediaType = "application/json", schema = @Schema(type = SchemaType.ARRAY, implementation = AcademicRecordResponse.class)))
+    @APIResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Invalid UUID", value = AcademicRecordExample.INVALID_UUID_RESPONSE)))
+    @APIResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Not Found", value = AcademicRecordExample.NOT_FOUND_RESPONSE)))
+    @APIResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Internal Server Error", value = AcademicRecordExample.INTERNAL_SERVER_ERROR_RESPONSE)))
+    public Response listByDiscipline(@PathParam("disciplineId") UUID disciplineId) {
+        return Response.ok(academicRecordService.listByDiscipline(disciplineId)).build();
+    }
 }

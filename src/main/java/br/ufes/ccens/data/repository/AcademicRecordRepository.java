@@ -47,6 +47,10 @@ public class AcademicRecordRepository implements PanacheRepositoryBase<AcademicR
         return find(query.toString(), params).list();
     }
 
+    public java.util.List<AcademicRecordEntity> findByDiscipline(UUID disciplineId) {
+        return find("discipline.disciplineId", disciplineId).list();
+    }
+
     public boolean hasDuplication(UUID studentId, UUID disciplineId, String semester, UUID excludeId) {
         StringBuilder query = new StringBuilder(
                 "student.studentId = :studentId AND discipline.disciplineId = :disciplineId AND semester = :semester");
