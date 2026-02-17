@@ -50,7 +50,8 @@ public class StudentService {
         studentRepository.persistAndFlush(studentEntity);
         return studentMapper.toResponse(studentEntity);
     }
-
+    
+    @Transactional
     public PageResponse<StudentResponse> listAll(Integer page, Integer pageSize, String sortBy, String sortDir,
             String name, String email,
             String registration, String cpf, String admStart,
@@ -97,6 +98,7 @@ public class StudentService {
                 query.pageCount());
     }
 
+    @Transactional
     public StudentResponse findById(UUID studentId) {
         var student = getStudentEntity(studentId);
         return studentMapper.toResponse(student);
