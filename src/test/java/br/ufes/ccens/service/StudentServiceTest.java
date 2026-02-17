@@ -1,16 +1,24 @@
 package br.ufes.ccens.service;
 
+import java.time.LocalDate;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.ufes.ccens.api.dto.request.SaveStudentRequest;
@@ -18,9 +26,6 @@ import br.ufes.ccens.api.mapper.StudentMapper;
 import br.ufes.ccens.core.service.StudentService;
 import br.ufes.ccens.data.entity.StudentEntity;
 import br.ufes.ccens.data.repository.StudentRepository;
-
-import java.time.LocalDate;
-import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
 public class StudentServiceTest {
