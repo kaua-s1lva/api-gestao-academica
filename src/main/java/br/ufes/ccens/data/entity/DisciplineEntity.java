@@ -19,7 +19,7 @@ public class DisciplineEntity extends BaseAuditEntity {
 
     private String name;
 
-    @Column(name = "cod")
+    @Column(name = "cod", unique = true)
     private String cod;
 
     @Column(name = "ch")

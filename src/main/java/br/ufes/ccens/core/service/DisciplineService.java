@@ -11,6 +11,7 @@ import br.ufes.ccens.api.dto.response.DisciplineResponse;
 import br.ufes.ccens.api.mapper.DisciplineMapper;
 import br.ufes.ccens.core.exception.ResourceNotFoundException;
 import br.ufes.ccens.data.repository.DisciplineRepository;
+import br.ufes.ccens.core.exception.DuplicateResourceException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
@@ -29,6 +30,11 @@ public class DisciplineService {
     @Transactional
     public DisciplineResponse createDiscipline(SaveDisciplineRequest request) {
         LOG.info("Criando nova disciplina: " + request.name());
+
+        if (disciplineRepository.find("cod", request.cod()).count() > 0) {
+            throw new DuplicateResourceException("cod", "Código de disciplina já cadastrado.");
+        }
+
         var entity = disciplineMapper.toEntity(request);
         disciplineRepository.persist(entity);
         return disciplineMapper.toResponse(entity);
@@ -53,6 +59,12 @@ public class DisciplineService {
         LOG.info("Atualizando disciplina ID: " + id);
         var entity = disciplineRepository.findByIdOptional(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Disciplina não encontrada com o ID fornecido."));
+
+        if (!entity.getCod().equals(request.cod())) {
+            if (disciplineRepository.find("cod", request.cod()).count() > 0) {
+                throw new DuplicateResourceException("cod", "Código de disciplina já cadastrado.");
+            }
+        }
 
         disciplineMapper.updateEntityFromDto(request, entity);
         disciplineRepository.persist(entity);
