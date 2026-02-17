@@ -3,8 +3,6 @@ package br.ufes.ccens.core.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.jboss.logging.Logger;
-
 import br.ufes.ccens.api.dto.request.SaveDisciplineRequest;
 import br.ufes.ccens.api.dto.request.UpdateDisciplineRequest;
 import br.ufes.ccens.api.dto.response.DisciplineResponse;
@@ -22,7 +20,6 @@ public class DisciplineService {
 
     private final DisciplineRepository disciplineRepository;
     private final DisciplineMapper disciplineMapper;
-    private static final Logger LOG = Logger.getLogger(DisciplineService.class);
 
     public DisciplineService(DisciplineRepository disciplineRepository, DisciplineMapper disciplineMapper) {
         this.disciplineRepository = disciplineRepository;
@@ -31,7 +28,6 @@ public class DisciplineService {
 
     @Transactional
     public DisciplineResponse createDiscipline(SaveDisciplineRequest request) {
-        LOG.info("Criando nova disciplina: " + request.name());
 
         if (disciplineRepository.find("cod", request.cod()).count() > 0) {
             throw new DuplicateResourceException("cod", "Código de disciplina já cadastrado.");
@@ -43,14 +39,12 @@ public class DisciplineService {
     }
 
     public List<DisciplineResponse> listAll() {
-        LOG.info("Listando todas as disciplinas");
         return disciplineRepository.listAll().stream()
                 .map(disciplineMapper::toResponse)
                 .toList();
     }
 
     public DisciplineResponse findById(UUID id) {
-        LOG.info("Buscando disciplina com ID: " + id);
         return disciplineRepository.findByIdOptional(id)
                 .map(disciplineMapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Disciplina não encontrada com o ID fornecido."));
@@ -58,7 +52,6 @@ public class DisciplineService {
 
     @Transactional
     public DisciplineResponse updateDiscipline(UUID id, UpdateDisciplineRequest request) {
-        LOG.info("Atualizando disciplina ID: " + id);
         var entity = disciplineRepository.findByIdOptional(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Disciplina não encontrada com o ID fornecido."));
 
@@ -75,7 +68,6 @@ public class DisciplineService {
 
     @Transactional
     public void deleteDiscipline(UUID id) {
-        LOG.info("Removendo disciplina ID: " + id);
         if (!disciplineRepository.deleteById(id)) {
             throw new ResourceNotFoundException("Disciplina não encontrada com o ID fornecido.");
         }

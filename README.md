@@ -53,16 +53,20 @@ A aplicação utiliza a metodologia do Twelve-Factor App para ocultar credenciai
 Crie um arquivo chamado `.env` na raiz do projeto (na mesma pasta do `pom.xml`) e adicione as seguintes variáveis:
 
 ```env
-# Configurações do Banco de Dados
-DB_URL=jdbc:mysql://localhost:3306/ccens_db
-DB_USER=seu_usuario_mysql
-DB_PASS=sua_senha_mysql
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=registro-academico
+DB_USERNAME=seu_usuario_mysql
+DB_PASSWORD=sua_senha_mysql
 
-# Caminho absoluto ou relativo da sua Chave Privada JWT (PKCS8)
 JWT_PRIVATE_KEY_PATH=privateKey.pem
+
+SEED_ADMIN_EMAIL=
+SEED_ADMIN_PASSWORD=
 ```
 
-> Obs.: Substitua `seu_usuario_mysql` e `sua_senha_mysql` pelos valores corretos do seu ambiente.
+> Obs.: Substitua `seu_usuario_mysql` e `sua_senha_mysql` pelos valores corretos do seu ambiente. Adicione também o email e senha de administrador
 
 ### 3. Geração das Chaves JWT (RSA)
 
@@ -97,7 +101,7 @@ Você pode rodar a aplicação em modo de desenvolvimento (habilita live coding)
 
 > NOTE: O Quarkus fornece uma Dev UI disponível apenas em modo dev: `http://localhost:8080/q/dev/`. Também é possível acessar a documentação da API: `http://localhost:8080/q/swagger-ui/`.
 
-Ao iniciar a aplicação com sucesso em modo `dev`, o schema será criado. Para acessar a aplicação, será necessário a inserção manual no banco de dados, através do arquivo `insertUser.sql`.
+Ao iniciar a aplicação com sucesso em modo `dev`, o schema será criado e o `UserSeeder` (seeder) gerará automaticamente o usuário Administrador usando as credenciais fornecidas no arquivo `.env`. Existem alguns registros já prontos para serem inseridos no banco de dados. Os registros estão localizados no arquivo `Script.sql`
 
 ## Packaging e execução
 

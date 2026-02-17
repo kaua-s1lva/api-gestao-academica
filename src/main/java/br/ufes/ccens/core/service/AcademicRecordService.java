@@ -3,8 +3,6 @@ package br.ufes.ccens.core.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.jboss.logging.Logger;
-
 import br.ufes.ccens.api.dto.request.SaveAcademicRecordRequest;
 import br.ufes.ccens.api.dto.request.UpdateAcademicRecordRequest;
 import br.ufes.ccens.api.dto.response.AcademicRecordResponse;
@@ -25,7 +23,6 @@ public class AcademicRecordService {
     private final StudentRepository studentRepository;
     private final DisciplineRepository disciplineRepository;
     private final AcademicRecordMapper academicRecordMapper;
-    private static final Logger LOG = Logger.getLogger(AcademicRecordService.class);
 
     public AcademicRecordService(
             AcademicRecordRepository academicRecordRepository,
@@ -40,7 +37,6 @@ public class AcademicRecordService {
 
     @Transactional
     public AcademicRecordResponse createAcademicRecord(SaveAcademicRecordRequest request) {
-        LOG.info("Criando novo registro acadêmico");
         var entity = academicRecordMapper.toEntity(request);
 
         var student = studentRepository.findByIdOptional(request.studentId())
@@ -57,14 +53,12 @@ public class AcademicRecordService {
     }
 
     public List<AcademicRecordResponse> listAll() {
-        LOG.info("Listando todos os registros acadêmicos");
         return academicRecordRepository.listAll().stream()
                 .map(academicRecordMapper::toResponse)
                 .toList();
     }
 
     public AcademicRecordResponse findById(UUID id) {
-        LOG.info("Buscando registro acadêmico com ID: " + id);
         return academicRecordRepository.findByIdOptional(id)
                 .map(academicRecordMapper::toResponse)
                 .orElseThrow(
@@ -73,7 +67,6 @@ public class AcademicRecordService {
 
     @Transactional
     public AcademicRecordResponse updateAcademicRecord(UUID id, UpdateAcademicRecordRequest request) {
-        LOG.info("Atualizando registro acadêmico ID: " + id);
         var entity = academicRecordRepository.findByIdOptional(id)
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Registro acadêmico não encontrado com o ID fornecido."));
@@ -98,7 +91,6 @@ public class AcademicRecordService {
 
     @Transactional
     public void deleteAcademicRecord(UUID id) {
-        LOG.info("Removendo registro acadêmico ID: " + id);
         if (!academicRecordRepository.deleteById(id)) {
             throw new ResourceNotFoundException("Registro acadêmico não encontrado com o ID fornecido.");
         }
