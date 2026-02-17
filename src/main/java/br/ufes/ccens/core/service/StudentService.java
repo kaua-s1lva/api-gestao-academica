@@ -17,6 +17,7 @@ import br.ufes.ccens.core.validation.student.StudentValidator;
 import br.ufes.ccens.data.entity.StudentEntity;
 import br.ufes.ccens.data.repository.StudentRepository;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
@@ -48,7 +49,7 @@ public class StudentService {
         return studentMapper.toResponse(studentEntity);
     }
 
-    public PageResponse<StudentResponse> listAll(Integer page, Integer pageSize, String name, String email, 
+    public PageResponse<StudentResponse> listAll(Integer page, Integer pageSize, String sortBy, String sortDir, String name, String email, 
                                                     String registration, String cpf, String admStart, 
                                                     String admEnd, String birthStart, String birthEnd) {
                                                     
@@ -57,15 +58,18 @@ public class StudentService {
         LocalDate birthStartDate = converter.parse(birthStart);
         LocalDate birthEndDate = converter.parse(birthEnd);
 
+        Sort.Direction direction = sortDir.equalsIgnoreCase("desc") ? Sort.Direction.Descending : Sort.Direction.Ascending;
+        Sort sort = Sort.by(sortBy, direction);
+
         PanacheQuery<StudentEntity> query;
 
         if (name != null || email != null || registration != null || cpf != null || admissionStart != null || birthStartDate != null) {
             LOG.info("Realizando busca com filtros inseridos");
             query = studentRepository.findWithFilters(name, email, registration, cpf, admissionStart, 
-                        admissionEnd, birthStartDate, birthEndDate);
+                        admissionEnd, birthStartDate, birthEndDate, sort);
         } else {
             LOG.info("Listando todos os estudantes (sem filtros)");
-            query = studentRepository.findAll();
+            query = studentRepository.findAll(sort);
         }
 
         query.page(page, pageSize);

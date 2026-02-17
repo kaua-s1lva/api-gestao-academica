@@ -36,6 +36,8 @@ public class StudentController {
     public Response listAll(
             @QueryParam("page") @DefaultValue("0") Integer page,
             @QueryParam("pageSize") @DefaultValue("10") Integer pageSize,
+            @QueryParam("sortBy") @DefaultValue("name") String sortBy,
+            @QueryParam("sortDirection") @DefaultValue("asc") String sortDir,
             @QueryParam("name") String name,
             @QueryParam("email") String email,
             @QueryParam("registration") String registration,
@@ -45,7 +47,7 @@ public class StudentController {
             @QueryParam("birthStart") String birthStart,
             @QueryParam("birthEnd") String birthEnd) {
         
-        var students = studentService.listAll(page, pageSize, name, email, registration, cpf, 
+        var students = studentService.listAll(page, pageSize, sortBy, sortDir, name, email, registration, cpf, 
             admStart, admEnd, birthStart, birthEnd);
         return Response.ok(students).build();
     }

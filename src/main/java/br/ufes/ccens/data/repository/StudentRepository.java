@@ -8,13 +8,14 @@ import java.util.UUID;
 import br.ufes.ccens.data.entity.StudentEntity;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
+import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class StudentRepository implements PanacheRepositoryBase<StudentEntity, UUID> {
     public PanacheQuery<StudentEntity> findWithFilters(String name, String email, String registration, String cpf, 
                                                        LocalDate admStart, LocalDate admEnd, 
-                                                       LocalDate birthStart, LocalDate birthEnd) {
+                                                       LocalDate birthStart, LocalDate birthEnd, Sort sort) {
         StringBuilder query = new StringBuilder("1=1");
         Map<String, Object> params = new HashMap<>();
 
@@ -45,6 +46,6 @@ public class StudentRepository implements PanacheRepositoryBase<StudentEntity, U
             params.put("bEnd", birthEnd);
         }
 
-        return find(query.toString(), params);
+        return find(query.toString(), sort, params);
     }
 }
