@@ -12,11 +12,13 @@ public class ConverterDataFormatImpl implements IConverterDataFormat {
     private static final DateTimeFormatter MULTI_FORMATTER = new DateTimeFormatterBuilder()
             .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE)
             .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+            .appendOptional(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
             .toFormatter();
 
     @Override
     public LocalDate parse(String dateStr) {
-        if (dateStr == null || dateStr.isBlank()) return null;
+        if (dateStr == null || dateStr.isBlank())
+            return null;
         try {
             return LocalDate.parse(dateStr, MULTI_FORMATTER);
         } catch (DateTimeParseException e) {
