@@ -1,0 +1,1 @@
+INSERT INTO tb_user VALUES ()

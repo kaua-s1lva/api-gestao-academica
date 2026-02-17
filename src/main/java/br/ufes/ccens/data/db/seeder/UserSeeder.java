@@ -1,5 +1,7 @@
 package br.ufes.ccens.data.db.seeder;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import br.ufes.ccens.data.entity.UserEntity;
 import br.ufes.ccens.data.entity.enums.RoleUserEnum;
 import br.ufes.ccens.data.repository.UserRepository;
@@ -17,6 +19,12 @@ public class UserSeeder {
     @Inject
     UserRepository userRepository;
 
+    @ConfigProperty(name = "app.seed.admin.email")
+    String adminEmail;
+
+    @ConfigProperty(name = "app.seed.admin.password")
+    String adminPassword;
+
     @Transactional
     public void onStart(@Observes StartupEvent ev) {
         System.out.println(">>> SEEDER: Iniciando verificação...");
@@ -29,8 +37,8 @@ public class UserSeeder {
         try {
             UserEntity user = new UserEntity();
             user.setName("admin");
-            user.setEmail("admin@email.com");
-            user.setPassword(BcryptUtil.bcryptHash("admin123"));
+            user.setEmail(adminEmail);
+            user.setPassword(BcryptUtil.bcryptHash(adminPassword));
             user.setRole(RoleUserEnum.ADMIN);
 
             userRepository.persistAndFlush(user);
