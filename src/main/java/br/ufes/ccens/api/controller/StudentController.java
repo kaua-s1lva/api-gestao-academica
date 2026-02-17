@@ -81,7 +81,7 @@ public class StudentController {
     @GET
     @Path("/{id}")
     @APIResponse(responseCode = "200", description = "Student found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StudentResponse.class), examples = @ExampleObject(name = "Student Found", value = StudentExample.FIND_BY_ID_RESPONSE)))
-    @APIResponse(responseCode = "400", description = "Bad Request (Invalid UUID)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Invalid UUID", value = StudentExample.INVALID_UUID_RESPONSE)))
+    @APIResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Invalid UUID", value = StudentExample.INVALID_UUID_RESPONSE)))
     @APIResponse(responseCode = "404", description = "Student not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Not Found", value = StudentExample.STUDENT_NOT_FOUND_RESPONSE)))
     @APIResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Internal Server Error", value = StudentExample.INTERNAL_SERVER_ERROR_RESPONSE)))
     public Response findStudentById(@PathParam("id") UUID studentId) {
