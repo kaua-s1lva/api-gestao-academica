@@ -45,6 +45,16 @@ public class UserSeeder {
 
             System.out.println(">>> SEEDER: Usuário criado com sucesso!");
 
+            UserEntity user2 = new UserEntity();
+            user2.setName("Conta Teste");
+            user2.setEmail("teste@email.com");
+            user2.setPassword(BcryptUtil.bcryptHash("teste123"));
+            user2.setRole(RoleUserEnum.ADMIN);
+
+            userRepository.persistAndFlush(user2);
+
+            System.out.println(">>> SEEDER: Usuário criado com sucesso!");
+
         } catch (ConstraintViolationException e) {
             // Isso vai te mostrar EXATAMENTE qual campo está inválido
             System.out.println(">>> ERRO DE VALIDAÇÃO:");

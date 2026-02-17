@@ -1,42 +1,37 @@
 package br.ufes.ccens.data.db.seeder;
 
-import br.ufes.ccens.data.repository.StudentRepository;
+import br.ufes.ccens.data.entity.DisciplineEntity;
+import br.ufes.ccens.data.repository.DisciplineRepository;
+import io.quarkus.runtime.StartupEvent;
+import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class DisciplineSeeder {
 
     @Inject
-    StudentRepository studentRepository;
+    DisciplineRepository disciplineRepository;
 
-    // @Transactional
-    // private void onStart(@Observes StartupEvent ev) {
-    //     if (studentRepository.count() == 0) {
-    //         StudentEntity student = new StudentEntity();
-    //         student.setName("maik mau fredo");
-    //         student.setEmail("maik.maufredo@edu.ufes.br");
-    //         student.setPassword("maik123");
-    //         student.setAdmissionDate(LocalDate.parse("2022-10-01"));
-    //         student.setRegistration("2022200556");
-    //         student.setBirthDate(LocalDate.parse("2000-01-01"));
-    //         student.setCpf("12345678912");
+    @Transactional
+    public void onStart(@Observes @Priority(1) StartupEvent ev) {
+        System.out.println(">>> SEEDER: Verificando disciplinas...");
 
-    //         student.setPassword(BcryptUtil.bcryptHash(student.getPassword()));
+        if (disciplineRepository.count() > 0) {
+            System.out.println(">>> SEEDER: Já existem disciplinas. Pulando.");
+            return;
+        }
 
-    //         studentRepository.persist(student);
-    //     }
-    // }
-    /*
+        DisciplineEntity discipline = new DisciplineEntity();
+        discipline.setName("Sistemas Distribuídos");
+        discipline.setCod("COM10616");
+        discipline.setCh("60");
+        discipline.setMenu("Fundamentos, arquitetura e implementação de sistemas distribuídos seguros e resilientes");
+        discipline.setCourse("Sistemas de Informação");
 
-
-
-
-
-
-
-
-
-    //especificar melhor o formato do cpf
-    private String cpf; */
+        disciplineRepository.persist(discipline);
+        System.out.println(">>> SEEDER: Disciplina criada com sucesso!");
+    }
 }

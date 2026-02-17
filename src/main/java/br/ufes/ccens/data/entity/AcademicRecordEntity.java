@@ -2,37 +2,106 @@ package br.ufes.ccens.data.entity;
 
 import java.util.UUID;
 
+import br.ufes.ccens.data.entity.audity.BaseAuditEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_academic_record")
-public class AcademicRecordEntity {
+public class AcademicRecordEntity extends BaseAuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID academicRecordId;
 
-    //nome da disciplina
-    private String subjectName;
-
-    //nota final da disciplina obtida pelo aluno
-    private Double finalGrade;
-
-    //frequência
     private Integer attendance;
 
-    //semestre
+    private Double finalGrade;
+
     private String semester;
 
-    //A situação final do aluno (ex: "APPROVED", "RECALLED", "FAILED")
     private String status;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "disciplineId", nullable = false)
+    private DisciplineEntity discipline;
+
+    @ManyToOne
     @JoinColumn(name = "studentId", nullable = false)
-    private StudentEntity studentId;
+    private StudentEntity student;
+
+    @Column(columnDefinition = "TEXT")
+    private String obs;
+
+    public AcademicRecordEntity() {
+    }
+
+    public UUID getAcademicRecordId() {
+        return academicRecordId;
+    }
+
+    public void setAcademicRecordId(UUID academicRecordId) {
+        this.academicRecordId = academicRecordId;
+    }
+
+    public Integer getAttendance() {
+        return attendance;
+    }
+
+    public void setAttendance(Integer attendance) {
+        this.attendance = attendance;
+    }
+
+    public Double getFinalGrade() {
+        return finalGrade;
+    }
+
+    public void setFinalGrade(Double finalGrade) {
+        this.finalGrade = finalGrade;
+    }
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public DisciplineEntity getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(DisciplineEntity discipline) {
+        this.discipline = discipline;
+    }
+
+    public StudentEntity getStudent() {
+        return student;
+    }
+
+    public void setStudent(StudentEntity student) {
+        this.student = student;
+    }
+
+    public String getObs() {
+        return obs;
+    }
+
+    public void setObs(String obs) {
+        this.obs = obs;
+    }
 }

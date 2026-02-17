@@ -45,7 +45,7 @@ public class AuthService {
 
         var existing = userRepository.find("email", userEntity.getEmail()).firstResult();
         if (existing != null) {
-            throw new DuplicateResourceException("E-mail já cadastrado");
+            throw new DuplicateResourceException("email", "O E-mail informado já está em uso por outro usuário.");
         }
 
         userEntity.setPassword(BcryptUtil.bcryptHash(userEntity.getPassword()));
