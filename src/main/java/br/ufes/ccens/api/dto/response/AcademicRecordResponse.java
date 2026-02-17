@@ -10,5 +10,5 @@ public record AcademicRecordResponse(
         Double finalGrade,
         String semester,
         String status,
-        String obs) {
-}
+        String obs
+) {}
