@@ -10,6 +10,7 @@ import br.ufes.ccens.api.dto.request.UpdateAcademicRecordRequest;
 import br.ufes.ccens.api.dto.response.AcademicRecordResponse;
 import br.ufes.ccens.api.mapper.AcademicRecordMapper;
 import br.ufes.ccens.core.exception.ResourceNotFoundException;
+import br.ufes.ccens.core.interceptor.LogTransaction;
 import br.ufes.ccens.data.repository.AcademicRecordRepository;
 import br.ufes.ccens.data.repository.DisciplineRepository;
 import br.ufes.ccens.data.repository.StudentRepository;
@@ -17,6 +18,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
+@LogTransaction
 public class AcademicRecordService {
 
     private final AcademicRecordRepository academicRecordRepository;

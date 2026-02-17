@@ -46,3 +46,7 @@ nb-configuration.xml
 
 # Chave Privada JWT (NUNCA commitar isso!)
 *.pem
+
+# Logs do sistema e da Web
+logs/*
+!logs/.gitkeep

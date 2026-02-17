@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import org.jboss.logging.Logger;
-
 import br.ufes.ccens.api.dto.request.SaveStudentRequest;
 import br.ufes.ccens.api.dto.request.UpdateStudentRequest;
 import br.ufes.ccens.api.dto.response.PageResponse;
@@ -13,6 +11,7 @@ import br.ufes.ccens.api.dto.response.StudentResponse;
 import br.ufes.ccens.api.mapper.StudentMapper;
 import br.ufes.ccens.common.util.IConverterDataFormat;
 import br.ufes.ccens.core.exception.ResourceNotFoundException;
+import br.ufes.ccens.core.interceptor.LogTransaction;
 import br.ufes.ccens.core.validation.student.StudentValidator;
 import br.ufes.ccens.data.entity.StudentEntity;
 import br.ufes.ccens.data.repository.StudentRepository;
@@ -22,12 +21,12 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
+@LogTransaction
 public class StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
     private final IConverterDataFormat converter;
     private final StudentValidator studentValidator;
-    private static final Logger LOG = Logger.getLogger(StudentService.class);
 
     public StudentService(
             StudentRepository studentRepository, 
@@ -45,7 +44,6 @@ public class StudentService {
         var studentEntity = studentMapper.toEntity(studentRequest);
         studentValidator.validate(studentEntity);
         studentRepository.persistAndFlush(studentEntity);
-        LOG.info("Estudante criado com sucesso: " + studentEntity.getStudentId());
         return studentMapper.toResponse(studentEntity);
     }
 
@@ -64,11 +62,9 @@ public class StudentService {
         PanacheQuery<StudentEntity> query;
 
         if (name != null || email != null || registration != null || cpf != null || admissionStart != null || birthStartDate != null) {
-            LOG.info("Realizando busca com filtros inseridos");
             query = studentRepository.findWithFilters(name, email, registration, cpf, admissionStart, 
                         admissionEnd, birthStartDate, birthEndDate, sort);
         } else {
-            LOG.info("Listando todos os estudantes (sem filtros)");
             query = studentRepository.findAll(sort);
         }
 
@@ -88,14 +84,12 @@ public class StudentService {
     }
 
     public StudentResponse findById(UUID studentId) {
-        LOG.info("Buscando estudante pelo ID: " + studentId);
         var student = getStudentEntity(studentId);
         return studentMapper.toResponse(student);
     }
 
     @Transactional
     public StudentResponse updateStudent(UUID studentId, UpdateStudentRequest studentRequest) {
-        LOG.info("Atualizando dados do estudante ID: " + studentId);
         var studentEntity = getStudentEntity(studentId);
         var newStudent = studentMapper.toEntity(studentRequest);
         newStudent.setStudentId(studentId);
@@ -109,7 +103,6 @@ public class StudentService {
 
     @Transactional
     public void deleteStudent(UUID studentId) {
-        LOG.info("Solicitação de exclusão para o estudante ID: " + studentId);
         var student = getStudentEntity(studentId);
         studentRepository.deleteById(student.getStudentId());
     }

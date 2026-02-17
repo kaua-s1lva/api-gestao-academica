@@ -12,15 +12,31 @@ import jakarta.validation.constraints.Past;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 public record SaveStudentRequest(
-        @NotBlank(message = "O nome é obrigatório") @Schema(title = "Name", example = "João da Silva") String name,
+        @NotBlank(message = "O nome é obrigatório") 
+        @Schema(title = "Name", example = "João da Silva") 
+        String name,
 
-        @NotBlank(message = "O email é obrigatório") @Email(message = "Formato de email inválido") @Schema(title = "Email", example = "joao.silva@example.com") String email,
+        @NotBlank(message = "O email é obrigatório") 
+        @Email(message = "Formato de email inválido") 
+        @Schema(title = "Email", example = "joao.silva@example.com") 
+        String email,
 
-        @NotBlank(message = "O número de matrícula é obrigatório") @Schema(title = "Registration", example = "2023100150") String registration,
+        @NotBlank(message = "O número de matrícula é obrigatório") 
+        @Schema(title = "Registration", example = "2023100150") 
+        String registration,
 
-        @NotNull(message = "A data de admissão é obrigatório") @Past(message = "A data de admissão deve estar no passado") @Schema(title = "Admission Date", example = "2023-02-01") LocalDate admissionDate,
+        @NotNull(message = "A data de admissão é obrigatório") 
+        @Past(message = "A data de admissão deve estar no passado") 
+        @Schema(title = "Admission Date", example = "2023-02-01") 
+        LocalDate admissionDate,
 
-        @NotNull(message = "A data de nascimento é obrigatório") @Past(message = "A data de nascimento deve estar no passado") @Schema(title = "Birth Date", example = "2000-05-15") LocalDate birthDate,
+        @NotNull(message = "A data de nascimento é obrigatório") 
+        @Past(message = "A data de nascimento deve estar no passado") 
+        @Schema(title = "Birth Date", example = "2000-05-15") 
+        LocalDate birthDate,
 
-        @NotBlank(message = "O CPF é obrigatório") @CPF(message = "CPF inválido") @Schema(title = "CPF", example = "123.456.789-00") String cpf) {
-}
+        @NotBlank(message = "O CPF é obrigatório") 
+        @CPF(message = "CPF inválido") 
+        @Schema(title = "CPF", example = "123.456.789-00") 
+        String cpf
+) {}
