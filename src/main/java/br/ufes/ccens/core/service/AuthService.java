@@ -8,12 +8,14 @@ import br.ufes.ccens.api.mapper.UserMapper;
 import br.ufes.ccens.common.util.GenerateToken;
 import br.ufes.ccens.core.exception.DuplicateResourceException;
 import br.ufes.ccens.core.exception.InvalidCredentialsException;
+import br.ufes.ccens.core.interceptor.LogTransaction;
 import br.ufes.ccens.data.repository.UserRepository;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
+@LogTransaction
 public class AuthService {
 
     private final GenerateToken generateToken;
