@@ -13,5 +13,5 @@ public record LoginUserRequest(
 
         @NotBlank(message = "A senha é obrigatório") 
         @Schema(title = "Password", example = "admin123") 
-        String password) {
-}
+        String password
+) {}
