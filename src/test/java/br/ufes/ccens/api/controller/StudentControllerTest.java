@@ -3,13 +3,8 @@ package br.ufes.ccens.api.controller;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import br.ufes.ccens.data.repository.StudentRepository;
 
 import java.util.UUID;
 
@@ -19,37 +14,9 @@ import static org.hamcrest.CoreMatchers.*;
 @QuarkusTest
 public class StudentControllerTest {
 
-    @Inject
-    StudentRepository studentRepository;
-
-    @BeforeEach
-    @Transactional
-    void cleanUp() {
-        studentRepository.deleteAll();
-    }
-
     @Test
     @TestSecurity(user = "admin", roles = {"ADMIN"}) 
     public void testListAllStudents() {
-        String studentPayload = """
-                {
-                  "name": "João da Silva",
-                  "email": "joao.silva@example.com",
-                  "registration": "2023100150",
-                  "admissionDate": "01-01-2021",
-                  "birthDate": "01-01-2001",
-                  "cpf": "69855070003"
-                }
-                """;
-
-        given()
-          .contentType(ContentType.JSON)
-          .body(studentPayload)
-        .when()
-          .post("/students")
-        .then()
-          .statusCode(201); // Garante que o usuário foi criado
-
         // 2. VALIDAÇÃO: Agora sim, chamamos a listagem esperando o Status 200
         given()
           .when()

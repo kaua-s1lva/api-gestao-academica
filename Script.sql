@@ -4,26 +4,26 @@
 INSERT INTO `tb_student` 
 (studentId, created_at, created_by, updated_at, updated_by, admissionDate, birthDate, cpf, email, name, registration) 
 VALUES 
-(UUID_TO_BIN('f8740ebb-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-05-10', '111.222.333-01', 'artur.siqueira@edu.ufes.br', 'Artur Matos Siqueira', '2021200505'),
-(UUID_TO_BIN('f8741338-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2022-02-01', '2004-08-22', '111.222.333-02', 'bernardo.rodrigues@edu.ufes.br', 'Bernardo Krause Rodrigues', '2022200534'),
-(UUID_TO_BIN('f874147a-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2022-02-01', '2004-01-15', '111.222.333-03', 'caio.silva@edu.ufes.br', 'Caio Freire Silva', '2022200432'),
-(UUID_TO_BIN('f8741546-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-11-30', '111.222.333-04', 'catterina.salvador@edu.ufes.br', 'Catterina Vittorazzi Salvador', '2021201420'),
-(UUID_TO_BIN('f874163d-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2022-02-01', '2004-03-12', '111.222.333-05', 'flavio.moreira@edu.ufes.br', 'Flavio Barreto Monteiro Moreira', '2022200708'),
-(UUID_TO_BIN('f8741795-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2020-02-01', '2002-07-07', '111.222.333-06', 'hudrson.silva@edu.ufes.br', 'Hudrson De Oliveira Silva', '2020205280'),
-(UUID_TO_BIN('f874184f-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2020-02-01', '2002-09-18', '111.222.333-07', 'isaack.arcanjo@edu.ufes.br', 'Isaack Anthony Cordeiro Arcanjo', '2020204017'),
-(UUID_TO_BIN('f874190b-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-04-25', '111.222.333-08', 'joao.santos@edu.ufes.br', 'Joao Victor Mascarenhas De Faria Santos', '2021200497'),
-(UUID_TO_BIN('f87419de-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-12-01', '111.222.333-09', 'kaio.nunes@edu.ufes.br', 'Kaio Stefan Campos Nunes', '2021201330'),
-(UUID_TO_BIN('f8741a95-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2022-02-01', '2004-06-14', '111.222.333-10', 'kaua.silva@edu.ufes.br', 'Kaua De Souza Da Silva', '2022200418'),
-(UUID_TO_BIN('f8741b4a-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-02-28', '111.222.333-11', 'kevin.florindo@edu.ufes.br', 'Kevin Depolli Costa Florindo', '2021200884'),
-(UUID_TO_BIN('f8741c13-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2020-02-01', '2002-10-10', '111.222.333-12', 'lukian.borges@edu.ufes.br', 'Lukian Alintes Freitas Borges', '2020204075'),
-(UUID_TO_BIN('f8741ccd-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2022-02-01', '2004-05-05', '111.222.333-13', 'maik.maifredo@edu.ufes.br', 'Maik Ramos Maifredo', '2022200556'),
-(UUID_TO_BIN('f8741d7d-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2022-02-01', '2004-09-09', '111.222.333-14', 'mariana.oliveira@edu.ufes.br', 'Mariana Cunha De Oliveira', '2022200854'),
-(UUID_TO_BIN('f8741e3a-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-03-20', '111.222.333-15', 'pedro.rocha@edu.ufes.br', 'Pedro Henrique Passos Rocha', '2021200617'),
-(UUID_TO_BIN('f8741f21-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2019-02-01', '2001-01-30', '111.222.333-16', 'pedro.gomes@edu.ufes.br', 'Pedro Lucas Gomes De Oliveira', '2019201886'),
-(UUID_TO_BIN('f8741fee-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2020-02-01', '2002-11-11', '111.222.333-17', 'rafael.nunes@edu.ufes.br', 'Rafael Cruz Merscher Nunes', '2020204249'),
-(UUID_TO_BIN('f87420a3-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-08-08', '111.222.333-18', 'ruan.ribeiro@edu.ufes.br', 'Ruan Vieira Ribeiro', '2021201419'),
-(UUID_TO_BIN('f8742156-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2023-02-01', '2005-04-04', '111.222.333-19', 'ruaney.mainarth@edu.ufes.br', 'Ruaney Ramos Mainarth', '2023201392'),
-(UUID_TO_BIN('f8742211-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2019-02-01', '2001-12-25', '111.222.333-20', 'vinicius.vieira@edu.ufes.br', 'Vinicius De Mello Vieira', '2019200674');
+(UUID_TO_BIN('f8740ebb-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-05-10', '641.630.980-70', 'artur.siqueira@edu.ufes.br', 'Artur Matos Siqueira', '2021200505'),
+(UUID_TO_BIN('f8741338-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2022-02-01', '2004-08-22', '386.718.340-69', 'bernardo.rodrigues@edu.ufes.br', 'Bernardo Krause Rodrigues', '2022200534'),
+(UUID_TO_BIN('f874147a-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2022-02-01', '2004-01-15', '896.804.730-82', 'caio.silva@edu.ufes.br', 'Caio Freire Silva', '2022200432'),
+(UUID_TO_BIN('f8741546-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-11-30', '921.645.200-50', 'catterina.salvador@edu.ufes.br', 'Catterina Vittorazzi Salvador', '2021201420'),
+(UUID_TO_BIN('f874163d-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2022-02-01', '2004-03-12', '949.552.470-91', 'flavio.moreira@edu.ufes.br', 'Flavio Barreto Monteiro Moreira', '2022200708'),
+(UUID_TO_BIN('f8741795-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2020-02-01', '2002-07-07', '776.455.500-23', 'hudrson.silva@edu.ufes.br', 'Hudrson De Oliveira Silva', '2020205280'),
+(UUID_TO_BIN('f874184f-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2020-02-01', '2002-09-18', '326.169.690-76', 'isaack.arcanjo@edu.ufes.br', 'Isaack Anthony Cordeiro Arcanjo', '2020204017'),
+(UUID_TO_BIN('f874190b-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-04-25', '401.020.500-82', 'joao.santos@edu.ufes.br', 'Joao Victor Mascarenhas De Faria Santos', '2021200497'),
+(UUID_TO_BIN('f87419de-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-12-01', '905.271.810-56', 'kaio.nunes@edu.ufes.br', 'Kaio Stefan Campos Nunes', '2021201330'),
+(UUID_TO_BIN('f8741a95-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2022-02-01', '2004-06-14', '466.201.910-96', 'kaua.silva@edu.ufes.br', 'Kaua De Souza Da Silva', '2022200418'),
+(UUID_TO_BIN('f8741b4a-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-02-28', '480.401.410-10', 'kevin.florindo@edu.ufes.br', 'Kevin Depolli Costa Florindo', '2021200884'),
+(UUID_TO_BIN('f8741c13-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2020-02-01', '2002-10-10', '416.123.010-96', 'lukian.borges@edu.ufes.br', 'Lukian Alintes Freitas Borges', '2020204075'),
+(UUID_TO_BIN('f8741ccd-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2022-02-01', '2004-05-05', '732.918.540-04', 'maik.maifredo@edu.ufes.br', 'Maik Ramos Maifredo', '2022200556'),
+(UUID_TO_BIN('f8741d7d-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2022-02-01', '2004-09-09', '289.277.340-76', 'mariana.oliveira@edu.ufes.br', 'Mariana Cunha De Oliveira', '2022200854'),
+(UUID_TO_BIN('f8741e3a-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-03-20', '681.410.650-76', 'pedro.rocha@edu.ufes.br', 'Pedro Henrique Passos Rocha', '2021200617'),
+(UUID_TO_BIN('f8741f21-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2019-02-01', '2001-01-30', '711.006.480-89', 'pedro.gomes@edu.ufes.br', 'Pedro Lucas Gomes De Oliveira', '2019201886'),
+(UUID_TO_BIN('f8741fee-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2020-02-01', '2002-11-11', '489.528.240-67', 'rafael.nunes@edu.ufes.br', 'Rafael Cruz Merscher Nunes', '2020204249'),
+(UUID_TO_BIN('f87420a3-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2021-02-01', '2003-08-08', '748.329.900-20', 'ruan.ribeiro@edu.ufes.br', 'Ruan Vieira Ribeiro', '2021201419'),
+(UUID_TO_BIN('f8742156-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2023-02-01', '2005-04-04', '352.075.210-71', 'ruaney.mainarth@edu.ufes.br', 'Ruaney Ramos Mainarth', '2023201392'),
+(UUID_TO_BIN('f8742211-0bcc-11f1-a5cb-002308b492c4'), NOW(), 'system', NOW(), 'system', '2019-02-01', '2001-12-25', '389.635.580-53', 'vinicius.vieira@edu.ufes.br', 'Vinicius De Mello Vieira', '2019200674');
 -- ==============================================================================
 -- 2. CARGA DE DADOS: DISCIPLINAS (tb_discipline)
 -- ==============================================================================

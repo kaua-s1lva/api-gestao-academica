@@ -110,6 +110,11 @@ public class StudentService {
         var newStudent = studentMapper.toEntity(studentRequest);
         newStudent.setStudentId(studentId);
 
+        if (newStudent.getCpf() == null || newStudent.getCpf().isEmpty()) {
+            newStudent.setCpf(studentEntity.getCpf());
+        }
+
+
         studentValidator.validate(newStudent);
         studentMapper.updateEntityFromDto(studentRequest, studentEntity);
         studentRepository.persist(studentEntity);

@@ -2,6 +2,9 @@ package br.ufes.ccens.data.entity;
 
 import java.util.UUID;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import br.ufes.ccens.data.entity.audity.BaseAuditEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,10 +32,12 @@ public class AcademicRecordEntity extends BaseAuditEntity {
 
     @ManyToOne
     @JoinColumn(name = "disciplineId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private DisciplineEntity discipline;
 
     @ManyToOne
     @JoinColumn(name = "studentId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private StudentEntity student;
 
     @Column(columnDefinition = "TEXT")
