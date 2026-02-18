@@ -1,4 +1,4 @@
-package br.ufes.ccens.service;
+package br.ufes.ccens.core.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
