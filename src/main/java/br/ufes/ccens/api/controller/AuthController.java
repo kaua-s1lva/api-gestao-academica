@@ -1,5 +1,7 @@
 package br.ufes.ccens.api.controller;
 
+import org.jboss.logging.Logger;
+
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -29,6 +31,7 @@ import jakarta.ws.rs.core.Response;
 public class AuthController {
 
     private final AuthService authService;
+    private static final Logger LOG = Logger.getLogger(AuthController.class);
 
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -44,6 +47,7 @@ public class AuthController {
     public Response login(
             @Valid @RequestBody(description = "Login credentials", required = true, content = @Content(schema = @Schema(implementation = LoginUserRequest.class), examples = @ExampleObject(name = "Login Request", value = AuthExample.LOGIN_REQUEST))) LoginUserRequest loginRequest) {
         var tokenResponse = authService.login(loginRequest);
+        LOG.info("Login realizado com sucesso!");
         return Response.ok(tokenResponse).build();
     }
 

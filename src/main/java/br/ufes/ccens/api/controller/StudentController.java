@@ -3,6 +3,8 @@ package br.ufes.ccens.api.controller;
 import java.util.Map;
 import java.util.UUID;
 
+import org.jboss.logging.Logger;
+
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -38,7 +40,8 @@ import jakarta.ws.rs.core.Response;
 @Authenticated
 public class StudentController {
     private final StudentService studentService;
-
+    private static final Logger LOG = Logger.getLogger(StudentController.class);
+    
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
@@ -85,6 +88,7 @@ public class StudentController {
     @APIResponse(responseCode = "404", description = "Student not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Not Found", value = StudentExample.STUDENT_NOT_FOUND_RESPONSE)))
     @APIResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Internal Server Error", value = StudentExample.INTERNAL_SERVER_ERROR_RESPONSE)))
     public Response findStudentById(@PathParam("id") UUID studentId) {
+        LOG.infof("Requisição GET recebida para buscar estudante ID: %s", studentId);
         return Response.ok(studentService.findById(studentId)).build();
     }
 
@@ -109,6 +113,7 @@ public class StudentController {
     @APIResponse(responseCode = "404", description = "Student not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Not Found", value = StudentExample.STUDENT_NOT_FOUND_RESPONSE)))
     @APIResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class), examples = @ExampleObject(name = "Internal Server Error", value = StudentExample.INTERNAL_SERVER_ERROR_RESPONSE)))
     public Response deleteStudent(@PathParam("id") UUID studentId) {
+        LOG.infof("Requisição DELETE recebida para o estudante ID: %s", studentId);
         studentService.deleteStudent(studentId);
         return Response.ok(Map.of("message", "Student successfully deleted!")).build();
     }

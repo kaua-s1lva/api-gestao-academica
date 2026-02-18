@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.jboss.logging.Logger;
 
+import br.ufes.ccens.core.exception.StudentNotFoundExceptionMapper;
 import br.ufes.ccens.data.entity.UserEntity;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -14,6 +16,8 @@ import jakarta.enterprise.context.ApplicationScoped;
  */
 @ApplicationScoped
 public class GenerateToken {
+    
+    private static final Logger LOG = Logger.getLogger(GenerateToken.class);
 
     @ConfigProperty(name = "mp.jwt.verify.issuer")
     String issuer;
@@ -28,7 +32,7 @@ public class GenerateToken {
                 .groups(new HashSet<>(Arrays.asList(user.getRole().name())))
                 .sign();
 
-        System.out.println(token);
+        LOG.infof("Token JWT gerado com sucesso para o usuário: %s", user.getEmail());
         return token;
     }
 }

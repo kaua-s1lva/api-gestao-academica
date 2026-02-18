@@ -1,0 +1,163 @@
+2026-02-16 12:07:40 ERROR [br.ufes.ccens.core.service.StudentService] (Test runner thread) Erro ao criar estudante: Erro de conexão
+2026-02-16 12:07:40 INFO  [br.ufes.ccens.core.service.StudentService] (Test runner thread) Estudante criado com sucesso: d5e83e89-c96d-464b-a760-c740a1f77c6a
+2026-02-16 12:07:40 INFO  [br.ufes.ccens.core.service.StudentService] (Test runner thread) Buscando estudante pelo ID: 16d290eb-79db-4739-b59e-23dd41992408
+2026-02-16 12:07:40 ERROR [br.ufes.ccens.core.service.StudentService] (Test runner thread) Erro ao converter data: data-errada
+2026-02-16 12:07:40 INFO  [br.ufes.ccens.core.service.StudentService] (Test runner thread) Realizando busca com filtros inseridos
+2026-02-16 12:07:40 INFO  [org.hibernate.jpa.internal.util.LogHelper] (Test runner thread) HHH000204: Processing PersistenceUnitInfo [name: <default>]
+2026-02-16 12:07:40 INFO  [org.hibernate.orm.connections.pooling] (Test runner thread) HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: MySQLDialect
+	Database version: 8.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-16 12:07:41 WARN  [io.quarkus.config] (Test runner thread) The "quarkus.hibernate-orm.database.generation" config property is deprecated and should not be used anymore.
+2026-02-16 12:07:41 INFO  [org.hibernate.orm.connections.pooling] (JPA Startup Thread) HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: MySQLDialect
+	Database version: 8.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-16 12:07:41 INFO  [br.ufes.ccens.data.db.seeder.UserSeeder] (Test runner thread) Verificando se há dados de Usuário ADMIN no banco...
+2026-02-16 12:07:41 INFO  [br.ufes.ccens.data.db.seeder.UserSeeder] (Test runner thread) Banco de dados já contém dados de Usuário ADMIN. Preenchimento automático ignorado.
+2026-02-16 12:07:41 INFO  [br.ufes.ccens.data.db.seeder.StudentSeeder] (Test runner thread) Verificando se há dados de Estudantes no banco...
+2026-02-16 12:07:41 INFO  [br.ufes.ccens.data.db.seeder.StudentSeeder] (Test runner thread) Banco de dados já contém dados de estudantes. Preenchimento automático ignorado.
+2026-02-16 12:07:41 INFO  [io.quarkus] (Test runner thread) sistema-registros-academicos 1.0.0-SNAPSHOT on JVM (powered by Quarkus 3.30.8) started in 1.365s. Listening on: http://localhost:8081
+2026-02-16 12:07:41 INFO  [io.quarkus] (Test runner thread) Profile test activated. 
+2026-02-16 12:07:41 INFO  [io.quarkus] (Test runner thread) Installed features: [agroal, cdi, compose, hibernate-orm, hibernate-orm-panache, hibernate-validator, jdbc-h2, jdbc-mysql, narayana-jta, rest, rest-jackson, security, smallrye-context-propagation, smallrye-jwt, smallrye-openapi, swagger-ui, vertx]
+2026-02-16 12:07:41 INFO  [br.ufes.ccens.api.controller.StudentController] (executor-thread-1) Requisiçao GET recebida para listar estudantes com filtros: Nome: null, Registro: null, CPF: null, Adm: null a null, Nascimento: null a null
+2026-02-16 12:07:41 INFO  [br.ufes.ccens.core.service.StudentService] (executor-thread-1) Listando todos os estudantes (sem filtros)
+2026-02-16 12:07:41 INFO  [br.ufes.ccens.api.controller.StudentController] (executor-thread-1) Filtro e Listagem realizada com sucesso!
+2026-02-16 12:07:41 INFO  [br.ufes.ccens.api.controller.StudentController] (executor-thread-1) Requisição POST recebida para criar novo estudante.
+2026-02-16 12:07:41 ERROR [br.ufes.ccens.core.service.StudentService] (executor-thread-1) Erro ao criar estudante: Erro ao capturar usuário logado: Current principal io.quarkus.security.runtime.QuarkusPrincipal@586036e is not a JSON web token
+2026-02-16 12:07:41 ERROR [io.quarkus.vertx.http.runtime.QuarkusErrorHandler] (executor-thread-1) HTTP Request to /students failed, error id: f5bbe956-300b-48d2-ae0a-257c76838986-5: java.lang.RuntimeException: Erro ao criar usuário: Erro ao capturar usuário logado: Current principal io.quarkus.security.runtime.QuarkusPrincipal@586036e is not a JSON web token
+	at br.ufes.ccens.core.service.StudentService.createStudent(StudentService.java:35)
+	at br.ufes.ccens.core.service.StudentService_ClientProxy.createStudent(Unknown Source)
+	at br.ufes.ccens.api.controller.StudentController.createStudent(StudentController.java:64)
+	at br.ufes.ccens.api.controller.StudentController_Subclass.createStudent$$superforward(Unknown Source)
+	at br.ufes.ccens.api.controller.StudentController_Subclass$0.apply(Unknown Source)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:73)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext$NextAroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:97)
+	at io.quarkus.security.runtime.interceptor.SecurityHandler.handle(SecurityHandler.java:27)
+	at io.quarkus.security.runtime.interceptor.AuthenticatedInterceptor.intercept(AuthenticatedInterceptor.java:29)
+	at io.quarkus.security.runtime.interceptor.AuthenticatedInterceptor_Bean.intercept(Unknown Source)
+	at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:70)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext$NextAroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:97)
+	at io.quarkus.security.runtime.interceptor.SecurityHandler.handle(SecurityHandler.java:27)
+	at io.quarkus.security.runtime.interceptor.RolesAllowedInterceptor.intercept(RolesAllowedInterceptor.java:29)
+	at io.quarkus.security.runtime.interceptor.RolesAllowedInterceptor_Bean.intercept(Unknown Source)
+	at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:70)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext$NextAroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:97)
+	at io.quarkus.resteasy.reactive.server.runtime.StandardSecurityCheckInterceptor.intercept(StandardSecurityCheckInterceptor.java:47)
+	at io.quarkus.resteasy.reactive.server.runtime.StandardSecurityCheckInterceptor$AuthenticatedInterceptor_Bean.intercept(Unknown Source)
+	at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:70)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext$NextAroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:97)
+	at io.quarkus.resteasy.reactive.server.runtime.StandardSecurityCheckInterceptor.intercept(StandardSecurityCheckInterceptor.java:47)
+	at io.quarkus.resteasy.reactive.server.runtime.StandardSecurityCheckInterceptor$RolesAllowedInterceptor_Bean.intercept(Unknown Source)
+	at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:70)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:62)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorBase.invokeInOurTx(TransactionalInterceptorBase.java:136)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorBase.invokeInOurTx(TransactionalInterceptorBase.java:107)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorRequired.doIntercept(TransactionalInterceptorRequired.java:38)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorBase.intercept(TransactionalInterceptorBase.java:61)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorRequired.intercept(TransactionalInterceptorRequired.java:32)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorRequired_Bean.intercept(Unknown Source)
+	at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext.perform(AroundInvokeInvocationContext.java:30)
+	at io.quarkus.arc.impl.InvocationContexts.performAroundInvoke(InvocationContexts.java:27)
+	at br.ufes.ccens.api.controller.StudentController_Subclass.createStudent(Unknown Source)
+	at br.ufes.ccens.api.controller.StudentController$quarkusrestinvoker$createStudent_2b0454c2545dcb173e7ee913dd4f6d139c3b5480.invoke(Unknown Source)
+	at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
+	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:183)
+	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$15.runWith(VertxCoreRecorder.java:645)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2651)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2630)
+	at org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1622)
+	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:11)
+	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:11)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+2026-02-16 12:07:41 INFO  [io.quarkus] (Test runner thread) sistema-registros-academicos(test application) stopped in 0.019s
+2026-02-16 12:07:41 ERROR [io.quarkus.test] (Test runner thread) [39m==================== TEST REPORT #19[39m ====================
+2026-02-16 12:07:41 ERROR [io.quarkus.test] (Test runner thread) [91mTest StudentResourceTest#testCriarAlunoValido() failed 
+[39m: java.lang.AssertionError: 1 expectation failed.
+Expected status code <201> but was <500>.
+
+	at io.restassured.internal.ValidatableResponseOptionsImpl.statusCode(ValidatableResponseOptionsImpl.java:89)
+	at br.ufes.ccens.StudentResourceTest.testCriarAlunoValido(StudentResourceTest.java:33)
+	Suppressed: java.lang.RuntimeException: Erro ao criar usuário: Erro ao capturar usuário logado: Current principal io.quarkus.security.runtime.QuarkusPrincipal@586036e is not a JSON web token
+		at br.ufes.ccens.core.service.StudentService.createStudent(StudentService.java:35)
+		at br.ufes.ccens.core.service.StudentService_ClientProxy.createStudent(Unknown Source)
+		at br.ufes.ccens.api.controller.StudentController.createStudent(StudentController.java:64)
+		at br.ufes.ccens.api.controller.StudentController_Subclass.createStudent$$superforward(Unknown Source)
+		at br.ufes.ccens.api.controller.StudentController_Subclass$0.apply(Unknown Source)
+		at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:73)
+		at io.quarkus.arc.impl.AroundInvokeInvocationContext$NextAroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:97)
+		at io.quarkus.security.runtime.interceptor.SecurityHandler.handle(SecurityHandler.java:27)
+		at io.quarkus.security.runtime.interceptor.AuthenticatedInterceptor.intercept(AuthenticatedInterceptor.java:29)
+		at io.quarkus.security.runtime.interceptor.AuthenticatedInterceptor_Bean.intercept(Unknown Source)
+		at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
+		at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:70)
+		at io.quarkus.arc.impl.AroundInvokeInvocationContext$NextAroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:97)
+		at io.quarkus.security.runtime.interceptor.SecurityHandler.handle(SecurityHandler.java:27)
+		at io.quarkus.security.runtime.interceptor.RolesAllowedInterceptor.intercept(RolesAllowedInterceptor.java:29)
+		at io.quarkus.security.runtime.interceptor.RolesAllowedInterceptor_Bean.intercept(Unknown Source)
+		at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
+		at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:70)
+		at io.quarkus.arc.impl.AroundInvokeInvocationContext$NextAroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:97)
+		at io.quarkus.resteasy.reactive.server.runtime.StandardSecurityCheckInterceptor.intercept(StandardSecurityCheckInterceptor.java:47)
+		at io.quarkus.resteasy.reactive.server.runtime.StandardSecurityCheckInterceptor$AuthenticatedInterceptor_Bean.intercept(Unknown Source)
+		at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
+		at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:70)
+		at io.quarkus.arc.impl.AroundInvokeInvocationContext$NextAroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:97)
+		at io.quarkus.resteasy.reactive.server.runtime.StandardSecurityCheckInterceptor.intercept(StandardSecurityCheckInterceptor.java:47)
+		at io.quarkus.resteasy.reactive.server.runtime.StandardSecurityCheckInterceptor$RolesAllowedInterceptor_Bean.intercept(Unknown Source)
+		at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
+		at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:70)
+		at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:62)
+		at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorBase.invokeInOurTx(TransactionalInterceptorBase.java:136)
+		at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorBase.invokeInOurTx(TransactionalInterceptorBase.java:107)
+		at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorRequired.doIntercept(TransactionalInterceptorRequired.java:38)
+		at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorBase.intercept(TransactionalInterceptorBase.java:61)
+		at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorRequired.intercept(TransactionalInterceptorRequired.java:32)
+		at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorRequired_Bean.intercept(Unknown Source)
+		at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:42)
+		at io.quarkus.arc.impl.AroundInvokeInvocationContext.perform(AroundInvokeInvocationContext.java:30)
+		at io.quarkus.arc.impl.InvocationContexts.performAroundInvoke(InvocationContexts.java:27)
+		at br.ufes.ccens.api.controller.StudentController_Subclass.createStudent(Unknown Source)
+		at br.ufes.ccens.api.controller.StudentController$quarkusrestinvoker$createStudent_2b0454c2545dcb173e7ee913dd4f6d139c3b5480.invoke(Unknown Source)
+		at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
+		at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:183)
+		at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+		at io.quarkus.vertx.core.runtime.VertxCoreRecorder$15.runWith(VertxCoreRecorder.java:645)
+		at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2651)
+		at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2630)
+		at org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1622)
+		at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+		at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:11)
+		at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:11)
+		at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+		at java.base/java.lang.Thread.run(Thread.java:1583)
+
+2026-02-16 12:07:41 ERROR [io.quarkus.test] (Test runner thread) [39m>>>>>>>>>>>>>>>>>>>> [91mSummary:[39m <<<<<<<<<<<<<<<<<<<<
+br.ufes.ccens.StudentResourceTest#testCriarAlunoValido(StudentResourceTest.java:33) [91mStudentResourceTest#testCriarAlunoValido()[39m 1 expectation failed.
+Expected status code <201> but was <500>.
+2026-02-16 12:07:41 ERROR [io.quarkus.test] (Test runner thread) [39m>>>>>>>>>>>>>>>>>>>> [91m1 TEST FAILED[39m <<<<<<<<<<<<<<<<<<<<

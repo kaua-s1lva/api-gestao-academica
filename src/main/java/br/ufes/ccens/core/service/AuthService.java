@@ -21,6 +21,7 @@ public class AuthService {
     private final GenerateToken generateToken;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private static final Logger LOG = Logger.getLogger(AuthService.class);
 
     public AuthService(GenerateToken generateToken, UserRepository userRepository, UserMapper userMapper) {
         this.generateToken = generateToken;
@@ -35,6 +36,7 @@ public class AuthService {
             throw new InvalidCredentialsException("E-mail ou senha inválidos");
         }
 
+        LOG.infof("Login bem-sucedido para o usuário: %s. Gerando token JWT...", user.getEmail());
         String token = generateToken.generateToken(user);
         return new TokenResponse(token);
     }

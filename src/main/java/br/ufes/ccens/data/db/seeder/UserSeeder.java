@@ -1,5 +1,7 @@
 package br.ufes.ccens.data.db.seeder;
 
+import org.jboss.logging.Logger;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import br.ufes.ccens.core.interceptor.LogTransaction;
@@ -16,6 +18,9 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 @LogTransaction
 public class UserSeeder {
+    
+    private static final Logger LOG = Logger.getLogger(UserSeeder.class);
+    
     @Inject
     UserRepository userRepository;
 
