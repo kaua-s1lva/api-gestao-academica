@@ -80,7 +80,11 @@ public class StudentEntity extends BaseAuditEntity {
     }
 
     public void setCpf(String cpf) {
-        this.cpf = cpf;
+        if (cpf != null) {
+            this.cpf = cpf.replaceAll("\\D", "");
+        } else {
+            this.cpf = null;
+        }
     }
 
     public UUID getStudentId() {
